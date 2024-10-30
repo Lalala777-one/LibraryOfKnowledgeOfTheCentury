@@ -17,7 +17,7 @@ public class BookRepositoryImpl implements BookRepository {
     }
 
     @Override
-    public void addBook(String title, String author) {
+    public void addBook(String title, String author, String genre) {
 
     }
 

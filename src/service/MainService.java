@@ -10,11 +10,8 @@ public interface MainService {
 
     // Методы, такие как добавитьТовар, создатьЗаказ, зарегистрироватьПользователя и т.д
 
-    void addBook(String title, String author);
 
-
-
-
+    void addBook(String title, String author, String genre);
 
     MyList<Book> getAllBooks();
     MyList<Book> getAllFreeBooks();
