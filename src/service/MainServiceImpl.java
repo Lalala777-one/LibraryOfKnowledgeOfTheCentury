@@ -3,7 +3,6 @@ package service;
 import model.Book;
 import model.User;
 import repository.BookRepository;
-import repository.BookRepositoryImpl;
 import repository.UserRepository;
 import utils.MyList;
 
@@ -20,9 +19,9 @@ public class MainServiceImpl  implements  MainService{
     }
 
     @Override
-    public void addBook(String title, String author) {
-
+    public void addBook(String title, String author, String genre) {
     }
+
 
     @Override
     public MyList<Book> getAllBooks() {
