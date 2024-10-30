@@ -1,14 +1,25 @@
 package repository;
 
 import model.Book;
+import utils.MyArrayList;
 import utils.MyList;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class BookRepositoryImpl implements BookRepository {
 
 
+    private final MyList<Book> books;
+
+    public final AtomicInteger currentId = new AtomicInteger(1);
+
+    public BookRepositoryImpl() {
+        this.books = new MyArrayList<>();;
+    }
+
 
     @Override
-    public void addBook(String title, String author) {
+    public void addBook(String title, String author, String genre) {
 
     }
 

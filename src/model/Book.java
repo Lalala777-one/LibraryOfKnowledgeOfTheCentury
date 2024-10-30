@@ -7,13 +7,23 @@ public class Book {
     private final int id;
     private String title;
     private String author;
+    private String genre;
     private boolean isBusy;
 
-    public Book(int id, String title, String author) {
+    public Book(int id, String title, String author, String genre) {
         this.id = id;
         this.title = title;
         this.author = author;
+        this.genre = genre;
 
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 
     public int getId() {

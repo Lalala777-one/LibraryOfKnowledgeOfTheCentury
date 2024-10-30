@@ -8,19 +8,25 @@ public interface MainService {
 
     // ---------------- методы для Books -------------------------------------//
 
-    void addBook(String title, String author);
+    // Методы, такие как добавитьТовар, создатьЗаказ, зарегистрироватьПользователя и т.д
+
+
+    void addBook(String title, String author, String genre);
 
     MyList<Book> getAllBooks();
-
     MyList<Book> getAllFreeBooks();
-
     MyList<Book> getAllBusyBooks();
 
+
+
     Book getBookById(int id);
-
     Book getBookByAuthor(String author);
-
     Book getBookByTitle(String title);
+    // метод     список книг по жанру??
+
+
+
+
 
     void deleteBook(Book book); // нельзя взять на прокат, больше не доступна // Доступно только АДМИНУ
 
@@ -44,14 +50,8 @@ public interface MainService {
     // --------------------- методы для Admin -------------------------- //
 
     void updateBook(int id); // ОПЦИОНАЛЬНО
+
     User whoHasBook(int id); // возвращает user у кого сейчас книга
-
-
-
-
-
-
-
 
 
 }
