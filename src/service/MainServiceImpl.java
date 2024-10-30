@@ -62,18 +62,12 @@ public class MainServiceImpl  implements  MainService{
 
     @Override
     public boolean takeBook(int id) {
-         /*
-        получить книгу из репозитория
-        проверить, что она найдена и свободна,
-        если нет - закончить работу метода,
-        если да  - пометить машину как занятую,
-                   добавить машину в список книг текущего пользователя
-         */
+
         Book book = repositoryBook.getBookById(id);
         if (book == null || book.isBusy()) {
             return false;
         } else {
-b
+
         }
 
         return true;
