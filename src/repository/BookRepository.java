@@ -17,9 +17,12 @@ public interface BookRepository {
 // ???
     Book getBookById(int id);
 
-    Book getBookByAuthor(String author);
+    MyList<Book> getBookByAuthor(String author);
 
     Book getBookByTitle(String title);
+
+    MyList<Book> getBookByGenre(String genre);
+
 
 
 

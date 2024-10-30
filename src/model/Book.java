@@ -63,6 +63,7 @@ public class Book {
                 ", title='" + title + '\'' +
                 ", author='" + author + '\'' +
                 ", isBusy=" + isBusy +
+                ", genre " + genre +
                 '}';
     }
 

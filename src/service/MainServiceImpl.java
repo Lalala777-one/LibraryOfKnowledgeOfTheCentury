@@ -73,7 +73,7 @@ public class MainServiceImpl  implements  MainService{
         if (book == null || book.isBusy()) {
             return false;
         } else {
-b
+
         }
 
         return true;
