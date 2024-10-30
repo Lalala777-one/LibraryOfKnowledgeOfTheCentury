@@ -2,9 +2,23 @@ package service;
 
 import model.Book;
 import model.User;
+import repository.BookRepository;
+import repository.BookRepositoryImpl;
+import repository.UserRepository;
 import utils.MyList;
 
 public class MainServiceImpl  implements  MainService{
+
+    private final BookRepository repositoryBook;
+    private final UserRepository repositoryUser;
+
+    private User activeUser;
+
+    public MainServiceImpl(BookRepository repositoryBook, UserRepository repositoryUser) {
+        this.repositoryBook = repositoryBook;
+        this.repositoryUser = repositoryUser;
+    }
+
     @Override
     public void addBook(String title, String author) {
 
