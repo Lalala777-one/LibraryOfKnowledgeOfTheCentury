@@ -2,9 +2,19 @@ package repository;
 
 import model.Book;
 import model.User;
+import utils.MyArrayList;
 import utils.MyList;
 
 public class UserRepositoryImpl implements UserRepository {
+
+    private final MyList<User> users;
+
+    public UserRepositoryImpl() {
+
+        users = new MyArrayList<>();
+    }
+
+
     @Override
     public void addUser(String email, String password) {
 
