@@ -13,20 +13,20 @@ public interface BookRepository {
 
     MyList<Book> getAllBusyBooks();
 
+
+// ???
     Book getBookById(int id);
 
     Book getBookByAuthor(String author);
 
     Book getBookByTitle(String title);
 
-    void deleteBook(Book book);
+
+
+
+    void deleteBook(Book book); // например испортил клиент
 
 
     // ОПЦИОНАЛЬНО
-
-
-
-
-
 
 }
