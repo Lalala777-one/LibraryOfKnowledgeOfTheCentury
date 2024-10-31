@@ -24,7 +24,6 @@ public interface MainService {
     MyList<Book> getBookByAuthor(String author);
     Book getBookByTitle(String title);
 
-
     MyList<Book> getBookByGenre(String genre);
 
     void deleteBook(Book book); // нельзя взять на прокат, больше не доступна // Доступно только АДМИНУ
