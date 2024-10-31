@@ -24,42 +24,133 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public void addBook(String title, String author, String genre) {
+        if (activeUser == null || activeUser.getRole() != Role.ADMIN) {
+            System.out.println("Добавление новой книги доступно только Администраторам");
+            return;
+        }
+        if (repositoryBook.getBookByTitle(title) != null) {
+            System.out.println("Книга з таким названием уже существует.");
+            return;
+        }
+        repositoryBook.addBook(title, author, genre);
+        System.out.println("Книга успешно добавлена: " + title);
     }
-
 
     @Override
     public MyList<Book> getAllBooks() {
-        return null;
+        if (activeUser == null) {
+            System.out.println("Пользователь не вошел в систему. Пожалуйста, войдите в систему для просмотра книг.");
+            return new MyArrayList<>();
+        }
+        MyList<Book> books = repositoryBook.getAllBooks();
+        System.out.println("Общее количество книг: " + books.size());
+        return books;
     }
 
     @Override
     public MyList<Book> getAllFreeBooks() {
-        return null;
+        if (activeUser == null) {
+            System.out.println("Пользователь не вошел в систему. Пожалуйста, войдите в систему для просмотра книг.");
+            return new MyArrayList<>();
+        }
+        MyList<Book> freeBooks = repositoryBook.getAllFreeBooks();
+        System.out.println("Количество свободных книг: " + freeBooks.size());
+        return freeBooks;
     }
 
     @Override
     public MyList<Book> getAllBusyBooks() {
-        return null;
+        if (activeUser == null) {
+            System.out.println("Пользователь не вошел в систему. Пожалуйста, войдите в систему для просмотра книг.");
+            return new MyArrayList<>();
+        }
+        MyList<Book> busyBooks = repositoryBook.getAllBusyBooks();
+        System.out.println("Количество занятых книг: " + busyBooks.size());
+        return busyBooks;
     }
 
     @Override
     public Book getBookById(int id) {
-        return null;
+        if (activeUser == null) {
+            System.out.println("Пользователь не вошел в систему. Пожалуйста, войдите в систему для просмотра книг.");
+            return null;
+        }
+        if (id <= 0) {
+            System.out.println("Неверный идентификатор книги.");
+            return null;
+        }
+        Book book = repositoryBook.getBookById(id);
+        if (book == null) {
+            System.out.println("Книга с таким идентификатором не найдена.");
+        }
+        return book;
     }
 
     @Override
-    public Book getBookByAuthor(String author) {
-        return null;
+    public MyList<Book> getBookByAuthor(String author) {
+        if (activeUser == null) {
+            System.out.println("Пользователь не вошел в систему. Пожалуйста, войдите в систему для просмотра книг.");
+            return null;
+        }
+        if (author == null || author.isEmpty()) {
+            System.out.println("Имя автора не может быть пустым.");
+            return null;
+        }
+        MyList<Book> booksByAuthor = repositoryBook.getBookByAuthor(author);
+        if (booksByAuthor.isEmpty()) {
+            System.out.println("Книги автора " + author + " не найдены.");
+        }
+        return booksByAuthor;
     }
 
     @Override
     public Book getBookByTitle(String title) {
-        return null;
+        if (activeUser == null) {
+            System.out.println("Пользователь не вошел в систему. Пожалуйста, войдите в систему для просмотра книг.");
+            return null;
+        }
+        if (title == null || title.isEmpty()) {
+            System.out.println("Название книги не может быть пустым.");
+            return null;
+        }
+        Book book = repositoryBook.getBookByTitle(title);
+        if (book == null) {
+            System.out.println("Книга с таким названием не найдена.");
+        }
+        return book;
+    }
+
+    @Override
+    public MyList<Book> getBookByGenre(String genre) {
+        if (activeUser == null) {
+            System.out.println("Пользователь не вошел в систему. Пожалуйста, войдите в систему для просмотра книг.");
+            return null;
+        }
+        if (genre == null || genre.isEmpty()) {
+            System.out.println("Жанр не может быть пустым.");
+            return null;
+        }
+        MyList<Book> booksByGenre = repositoryBook.getBookByGenre(genre);
+        if (booksByGenre.isEmpty()) {
+            System.out.println("Книги жанра " + genre + " не найдены.");
+        }
+        return booksByGenre;
     }
 
     @Override
     public void deleteBook(Book book) {
+        if (activeUser == null || activeUser.getRole() != Role.ADMIN) {
+            System.out.println("Доступно только Администраторам");
+            return;
+        }
+        Book existingBook = repositoryBook.getBookById(book.getId());
+        if (existingBook == null) {
+            System.out.println("Книга за таким Id не найдена");
+            return;
+        }
 
+        repositoryBook.deleteBook(existingBook);
+        System.out.println("Книга удалена: " + book.getId());
     }
 
     //-----------------------------------------Alla Nazarenko------------------------------
