@@ -21,13 +21,10 @@ public interface MainService {
 
 
     Book getBookById(int id);
-    Book getBookByAuthor(String author);
+    MyList<Book> getBookByAuthor(String author);
     Book getBookByTitle(String title);
 
-
-
-
-
+    MyList<Book> getBookByGenre(String genre);
 
     void deleteBook(Book book); // нельзя взять на прокат, больше не доступна // Доступно только АДМИНУ
 
