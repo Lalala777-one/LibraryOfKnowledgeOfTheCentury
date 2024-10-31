@@ -75,6 +75,10 @@ public class MainServiceImpl implements MainService {
         если да  - пометить книгу как занятую,
                    добавить книгу в список книг текущего пользователя
          */
+        if (activeUser == null){
+            System.out.println("Вы не вошли в библиотеку. Залогинтесь пожалуйста");
+            return false;
+        }
         Book book = repositoryBook.getBookById(id);
         if (book == null || book.isBusy()) {
             System.out.println("Книга не найдена или занята");
@@ -89,6 +93,11 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public boolean returnBook(int id) {
+        if (activeUser == null){
+            System.out.println("Вы не вошли в библиотеку. Залогинтесь пожалуйста");
+            return false;
+        }
+
         /*
         получить книгу из репозитория и присвоить её в переменную
         проверить, что она найдена и занята,
@@ -110,6 +119,10 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public MyList<Book> getAllUsersBook(User user) {
+        if (activeUser == null && activeUser.getRole() != Role.ADMIN){
+            System.out.println("У вас недостаточно прав для просмотра списка книг");
+            return new MyArrayList<>();
+        }
         /*
         проверяем переданного в метод юзера:
             не равен ли null
@@ -212,7 +225,7 @@ public class MainServiceImpl implements MainService {
         // 1) длина >=8
         boolean passwordLength = false;
         if (password == null || password.length() < 8) {
-            System.out.println("Password should be at least 8 characters");
+            System.out.println("Пароль должен содержать не менее 8 мисволов");
             return passwordLength = false;
         }
 
@@ -241,7 +254,7 @@ public class MainServiceImpl implements MainService {
 
         // проверка пользователя по email
         if (email == null || !repositoryUser.isEmailExist(email)) {
-            System.out.println("К сожалению вы не являетесь нашим пользователем. Зарегистрируйтесь");
+            System.out.println("К сожалению вы не являетесь нашим пользователем. Зарегистрируйтесь пожалуйста");
             return false;
         }
 
