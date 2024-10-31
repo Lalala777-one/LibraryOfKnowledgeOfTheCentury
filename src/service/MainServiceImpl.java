@@ -119,7 +119,7 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public MyList<Book> getAllUsersBook(User user) {
-        if (activeUser == null && activeUser.getRole() != Role.ADMIN){
+        if (user == null && user.getRole() != Role.ADMIN){
             System.out.println("У вас недостаточно прав для просмотра списка книг");
             return new MyArrayList<>();
         }
