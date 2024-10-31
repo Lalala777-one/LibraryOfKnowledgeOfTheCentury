@@ -84,7 +84,7 @@ public class MainServiceImpl implements MainService {
             System.out.println("Книга не найдена или занята");
             return false;
         } else {
-            book.isBusy();
+            book.setBusy(true);
             activeUser.getUserBooks().add(book);
             System.out.println("Книга успешно взята читателем");
             return true;
