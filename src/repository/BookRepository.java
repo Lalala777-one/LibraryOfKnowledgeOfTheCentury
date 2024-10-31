@@ -13,8 +13,6 @@ public interface BookRepository {
 
     MyList<Book> getAllBusyBooks();
 
-
-// ???
     Book getBookById(int id);
 
     MyList<Book> getBookByAuthor(String author);
@@ -23,13 +21,6 @@ public interface BookRepository {
 
     MyList<Book> getBookByGenre(String genre);
 
-
-
-
-
     void deleteBook(Book book); // например испортил клиент
-
-
-    // ОПЦИОНАЛЬНО
 
 }
