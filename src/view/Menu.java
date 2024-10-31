@@ -6,7 +6,6 @@ import service.MainService;
 import utils.MyList;
 
 import java.awt.*;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class Menu {
@@ -16,13 +15,8 @@ public class Menu {
     private final static String COLOR_BLACK = "\u001B[0m";
 
     public static final String COLOR_RESET = "\u001B[0m";
-    public static final String COLOR_RED = "\u001B[31m";
-    public static final String COLOR_GREEN = "\u001B[32m";
     public static final String COLOR_YELLOW = "\u001B[33m";
     public static final String COLOR_BLUE = "\u001B[34m";
-    public static final String COLOR_PURPLE = "\u001B[35m";
-    public static final String COLOR_CYAN = "\u001B[36m";
-
     public static final String COLOR_WHITE = "\u001B[37m";
 
     public Menu(MainService service) {
@@ -34,22 +28,44 @@ public class Menu {
         scanner.nextLine();
     }
 
+    private int scanCorrectIntFromUser(int maxInputInt){
+
+        int number;
+
+        while (true) {
+            System.out.print("Введите число от 0 до " + maxInputInt + ": ");
+            try {
+                number = scanner.nextInt();
+
+                if (number >= 0 && number <= maxInputInt) {
+
+                    return number;
+                } else {
+                    System.out.println("Ошибка: число должно быть от 0 до " + maxInputInt + ".");
+                }
+            } catch (Exception e) {
+                System.out.println("Ошибка: введите целое число.");
+                scanner.next();
+            }
+        }
+    }
+
     public void run() {showMenu();}
 
     private void showMenu() {
         while (true){
             System.out.println(Color.BLUE + "Добро пожаловать в меню" + COLOR_RESET);
-            System.out.println("1. Меню книг");
-            System.out.println("2. Меню пользователей");
-            System.out.println("3. Меню администратора");
-            System.out.println("0. Выход из системы");
+            System.out.println(Color.BLUE + "1. Меню книг" + COLOR_RESET);
+            System.out.println(Color.BLUE + "2. Меню пользователей" + COLOR_RESET);
+            System.out.println(Color.BLUE + "3. Меню администратора" + COLOR_RESET);
+            System.out.println(Color.BLUE + "0. Выход из системы" + COLOR_RESET);
             System.out.println(Color.YELLOW + "\nВведите пункт меню:" + COLOR_RESET);
 
             int choice = scanner.nextInt();
             scanner.nextLine();
 
             if (choice == 0){
-                System.out.println("До свидания!");
+                System.out.println(Color.YELLOW + "До свидания!" + COLOR_RESET);
 
                 System.exit(0);
             }
@@ -82,22 +98,20 @@ public class Menu {
                 System.out.println(Color.YELLOW + "Сделайте корректный выбор\n" + COLOR_RESET);
         }
     }
-    //todo
+
     private void showBookMenu(){
         while (true){
-            System.out.println("Список книг");
-            System.out.println("1. Список всех книг");
-            System.out.println("2. Список всех свободных книг");
-            System.out.println("3. Список всех занятых книг");
-            System.out.println("0. Вернуться в предыдущее меню");
+            System.out.println(Color.BLUE + "Список книг" + COLOR_RESET);
+            System.out.println(Color.BLUE + "1. Список всех книг" + COLOR_RESET);
+            System.out.println(Color.BLUE + "2. Список всех свободных книг" + COLOR_RESET);
+            System.out.println(Color.BLUE + "3. Список всех занятых книг" + COLOR_RESET);
+            System.out.println(Color.BLUE + "0. Вернуться в предыдущее меню" + COLOR_RESET);
 
-            System.out.println("\n Сделайте выбор пункта меню");
-            int input = scanner.nextInt();
+            System.out.println(Color.YELLOW + "\n Сделайте выбор пункта меню" + COLOR_RESET);
+            int input = scanCorrectIntFromUser(3);
             scanner.nextLine();
 
             if (input == 0) break;
-
-            //проверка на неверные цифры
 
             handleBookMenuChoice(input);
         }
@@ -106,7 +120,7 @@ public class Menu {
     private void handleBookMenuChoice(int input){
         switch (input) {
             case 1:
-                System.out.println("Метод в разработке. Приходите завтра");
+                System.out.println("Метод в разработке. Приходите завтра"); //дописать
 
                 waitRead();
 
@@ -119,15 +133,6 @@ public class Menu {
                 break;
             case 3:
                 showBusyBooksListMenu();
-
-                waitRead();
-
-                break;
-            case 4:
-                //поиск по автору, id, титель
-
-            case 5:
-                returnBookMenu();
 
                 waitRead();
 
@@ -150,16 +155,11 @@ public class Menu {
 
             System.out.println("0. Вернуться в предыдущее меню");
 
-            int freeBookInput = scanner.nextInt();
-            scanner.nextLine();
+            int freeBookInput = scanCorrectIntFromUser(freeBooks.size());
 
             if (freeBookInput == 0) break;
 
             Book chosenBook = freeBooks.get(freeBookInput - 1);
-
-            if (Objects.isNull(chosenBook)) {
-                System.out.println("\nНеверный ввод");
-            }
 
             showFreeBookMenu(chosenBook);
         }
@@ -181,6 +181,7 @@ public class Menu {
 
             service.takeBook(book.getId());
             System.out.println("Книга \"" + book.getTitle() + "\", " + book.getAuthor() + " успешно взята.");
+
         }
     }
 
@@ -192,8 +193,7 @@ public class Menu {
             System.out.println("0. Вернуться в предыдущее меню");
 
             System.out.println("\n Сделайте выбор пункта меню");
-            int input = scanner.nextInt();
-            scanner.nextLine();
+            int input = scanCorrectIntFromUser(1);
 
             if (input == 0) break;
 
@@ -202,10 +202,9 @@ public class Menu {
         }
     }
 
-
     private void showBusyBooksListMenu(){
+        System.out.println("Список занятых книг:");
         while (true){
-            System.out.println("Список занятых книг:");
 
             MyList<Book> busyBooks = service.getAllBusyBooks();
             for (int index = 0; index < busyBooks.size(); index++) {
@@ -216,33 +215,28 @@ public class Menu {
 
             System.out.println("0. Вернуться в предыдущее меню");
 
-            int busyBookInput = scanner.nextInt();
-            scanner.nextLine();
+            int busyBookInput = scanCorrectIntFromUser(busyBooks.size());
 
             if (busyBookInput == 0) break;
 
             Book chosenBook = busyBooks.get(busyBookInput - 1);
 
-            if (Objects.isNull(chosenBook)) {
-                System.out.println("\nНеверный ввод");
-            }
+            returnBookMenu(chosenBook);
         }
     }
 
     private void showUserMenu(){
         while (true){
-            System.out.println("Меню пользователя");
-            System.out.println("1. Вход в систему");
-            System.out.println("2. Регистрация нового пользователя");
-            System.out.println("3. Logout");
-            System.out.println("0. Вернуться в предыдущее меню");
+            System.out.println(Color.BLUE + "Меню пользователя" + COLOR_RESET);
+            System.out.println(Color.BLUE + "1. Вход в систему" + COLOR_RESET);
+            System.out.println(Color.BLUE + "2. Регистрация нового пользователя" + COLOR_RESET);
+            System.out.println(Color.BLUE + "3. Logout" + COLOR_RESET);
+            System.out.println(Color.BLUE + "0. Вернуться в предыдущее меню" + COLOR_RESET);
 
-            System.out.println("\n Сделайте выбор пункта меню");
-            int input = scanner.nextInt();
-            scanner.nextLine();
+            System.out.println(Color.YELLOW + "\n Сделайте выбор пункта меню" + COLOR_RESET);
+            int input = scanCorrectIntFromUser(3);
 
             if (input == 0) break;
-            //проверка на другие цифры
 
             handleUserMenuChoice(input);
         }
@@ -251,7 +245,8 @@ public class Menu {
     private void handleUserMenuChoice(int input){
         switch (input) {
             case 1:
-                //Todo написать авторизацию
+                //Todo подтянуть авторизацию
+                //service.loginUser(email, password);
                 System.out.println("Метод в разработке. Приходите завтра");
 
                 waitRead();
@@ -293,17 +288,15 @@ public class Menu {
     private void showAdminMenu(){
         while (true){
             System.out.println("Меню админа");
-            System.out.println("1. Вход в систему");
-            System.out.println("2. Изменение книг");
-            System.out.println("3. Logout");
+            System.out.println("1. Добавить книгу");
+            System.out.println("2. Удалить книгу");
+            System.out.println("3. Найти, у кого книга сейчас");
             System.out.println("0. Вернуться в предыдущее меню");
 
             System.out.println("\n Сделайте выбор пункта меню");
-            int input = scanner.nextInt();
-            scanner.nextLine();
+            int input = scanCorrectIntFromUser(3);
 
             if (input == 0) break;
-            //проверка на другие цифры
 
             handleAdminMenuChoice(input);
         }
@@ -311,89 +304,84 @@ public class Menu {
     private void handleAdminMenuChoice(int input){
         switch (input) {
             case 1:
-                System.out.println("Метод в разработке. Приходите завтра");
-
-                waitRead();
+                addBook();
 
                 break;
             case 2:
-                showFreeBooksListMenu();
-
-                waitRead();
+                deleteBook();
 
                 break;
             case 3:
-                showBusyBooksListMenu();
-
-                waitRead();
-
-                break;
-            case 4:
-                addBook(String title, String author, String genre);
-
-                waitRead();
-
-                break;
-            case 5:
-                updateBook();
-
-                waitRead();
-
-                break;
-            case 6:
-                deleteBook(Book book);
-
-                waitRead();
-
-                break;
-            case 7:
                 whoHasBook();
-
-                waitRead();
 
                 break;
             default:
                 System.out.println("\nНеверный ввод");
         }
     }
-    private void addBook(String title, String author, String genre) {
+    private void addBook() {
 
         System.out.println("Добавить новую книгу");
-        //  что здесь должно быть?
+
+        System.out.println("Введите название: ");
+        String title = scanner.nextLine();
+        scanner.nextLine();
+
+        System.out.println("Введите автора: ");
+        String author = scanner.nextLine();
+        scanner.nextLine();
+
+        System.out.println("Введите жанр: ");
+        String genre = scanner.nextLine();
+        scanner.nextLine();
+
+        service.addBook(title, author, genre);
+        System.out.println("Книга \"" + title + "\", " + author + "\", " + genre
+                + "\", " + " успешно добавлена.");
 
     }
 
-    private void updateBook(){
-
-        System.out.println("Редактировать книгу");
-        //  что здесь должно быть?
-    }
-
-    private void deleteBook(Book book){
+    private void deleteBook(){
         System.out.println("Удалить книгу");
 
         while (true){
-            System.out.println("Книга: \"" + book.getTitle() + "\", " + book.getAuthor());
+            System.out.println("Введите ID книги, которую надо удалить: ");
+
+            int bookID = scanner.nextInt();
+            scanner.nextLine();
+
+            Book book = service.getBookById(bookID);
+
+            System.out.println("Книга: \"" + book.getTitle() + "\", " + book.getAuthor() + "\", " + book.getGenre());
             System.out.println("1. Удалить");
             System.out.println("0. Вернуться в предыдущее меню");
 
             System.out.println("\n Сделайте выбор пункта меню");
-            int input = scanner.nextInt();
-            scanner.nextLine();
+            int input = scanCorrectIntFromUser(1);
 
             if (input == 0) break;
 
-            int deleteBookPerID = service.deleteBook(Book book);
+            service.deleteBook(book);
 
-            service.deleteBookPerID(book.getId());
-            System.out.println("Книга \"" + book.getTitle() + "\", " + book.getAuthor() + " успешно удалена.");
+            System.out.println("Книга \"" + book.getTitle() + "\", " + book.getAuthor() + "\", " + book.getGenre()
+                    + "\", " +  " успешно удалена.");
         }
 
     }
     private void whoHasBook(){
 
-        System.out.println("У какого читателя находится книга?");
-        //  что здесь должно быть?
+        System.out.println("У какого читателя находится книга: ");
+        System.out.println("Введите ID книги: ");
+
+        int bookID = scanner.nextInt();
+        scanner.nextLine();
+
+        Book book = service.getBookById(bookID);
+        User user = service.whoHasBook(bookID);
+
+        System.out.println("Книга \"" + book.getTitle() + "\", " + book.getAuthor() + ", " + book.getGenre()
+               + " находится у читателя c email " + user.getEmail());
+
     }
 
 }
