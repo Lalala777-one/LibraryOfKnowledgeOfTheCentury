@@ -19,10 +19,11 @@ public interface MainService {
 
 
 
+
     Book getBookById(int id);
     Book getBookByAuthor(String author);
     Book getBookByTitle(String title);
-    // метод     список книг по жанру??
+
 
 
 
