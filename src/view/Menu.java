@@ -238,9 +238,22 @@ public class Menu {
     private void handleUserMenuChoice(int input){
         switch (input) {
             case 1:
-                //Todo подтянуть авторизацию
-                //service.loginUser(email, password);
-                System.out.println("Метод в разработке. Приходите завтра");
+                // Подтягиваем авторизацию
+                System.out.println("Введите ваш email:");
+                String email = scanner.nextLine();
+                scanner.nextLine();
+
+                System.out.println("Введите ваш пароль:");
+                String password = scanner.nextLine();
+                scanner.nextLine();
+
+                boolean isLoggedIn = service.loginUser(email, password);
+
+                if (isLoggedIn) {
+                    System.out.println("Вы успешно вошли в систему.");
+                } else {
+                    System.out.println("Неверный email или пароль. Попробуйте снова.");
+                }
 
                 waitRead();
 
@@ -248,14 +261,14 @@ public class Menu {
             case 2:
                 System.out.println("Регистрация нового пользователя");
                 System.out.println("Введите email:");
-                String email = scanner.nextLine();
+                String email1 = scanner.nextLine();
                 scanner.nextLine();
 
                 System.out.println("Введите пароль");
-                String password = scanner.nextLine();
+                String password1 = scanner.nextLine();
                 scanner.nextLine();
 
-                User user = service.registerUser(email, password);
+                User user = service.registerUser(email1, password1);
 
                 if (user != null) {
                     System.out.println("Вы успешно зарегистрировались в системе");
