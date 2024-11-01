@@ -22,6 +22,10 @@ public class MainServiceImpl implements MainService {
         this.repositoryUser = repositoryUser;
     }
 
+    public User getActiveUser() {
+        return activeUser;
+    }
+
     @Override
     public void addBook(String title, String author, String genre) {
         if (activeUser == null || activeUser.getRole() != Role.ADMIN) {
@@ -166,7 +170,7 @@ public class MainServiceImpl implements MainService {
         если да  - пометить книгу как занятую,
                    добавить книгу в список книг текущего пользователя
          */
-        if (activeUser == null){
+        if (activeUser == null) {
             System.out.println("Вы не вошли в библиотеку. Залогинтесь пожалуйста");
             return false;
         }
@@ -184,11 +188,10 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public boolean returnBook(int id) {
-        if (activeUser == null){
+        if (activeUser == null) {
             System.out.println("Вы не вошли в библиотеку. Залогинтесь пожалуйста");
             return false;
         }
-
         /*
         получить книгу из репозитория и присвоить её в переменную
         проверить, что она найдена и занята,
@@ -198,19 +201,25 @@ public class MainServiceImpl implements MainService {
          */
         Book book = repositoryBook.getBookById(id);
         if (book == null || !book.isBusy()) {
-            System.out.println("Книга не найдена");
+            System.out.println("Книга не найдена или свободна");
             return false;
-        } else {
-            book.setBusy(false);
-            activeUser.getUserBooks().remove(book);
-            System.out.println("Книга успешно возвращена в библиотеку");
-            return true;
         }
+
+        // проверяем, принадлежит ли книга  активному пользователю
+        if(!activeUser.getUserBooks().contains(book)) {
+            System.out.println("Книга не находится у активного пользователя");
+            return false;
+        }
+
+        book.setBusy(false);
+        activeUser.getUserBooks().remove(book);
+        System.out.println("Книга успешно возвращена в библиотеку");
+        return true;
     }
 
     @Override
     public MyList<Book> getAllUsersBook(User user) {
-        if (user == null && user.getRole() != Role.ADMIN){
+        if (user == null && user.getRole() != Role.ADMIN) {
             System.out.println("У вас недостаточно прав для просмотра списка книг");
             return new MyArrayList<>();
         }
