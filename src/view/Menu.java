@@ -5,7 +5,6 @@ import model.User;
 import service.MainService;
 import utils.MyList;
 
-import java.awt.*;
 import java.util.Scanner;
 
 public class Menu {
@@ -16,12 +15,12 @@ public class Menu {
         this.service = service;
     }
 
-    private void waitRead(){
+    private void waitRead() {
         System.out.println("\n Для продожения нажмите enter");
         scanner.nextLine();
     }
 
-    private int scanCorrectIntFromUser(int maxInputInt){
+    private int scanCorrectIntFromUser(int maxInputInt) {
 
         int number;
 
@@ -45,10 +44,12 @@ public class Menu {
         }
     }
 
-    public void run() {showMenu();}
+    public void run() {
+        showMenu();
+    }
 
     private void showMenu() {
-        while (true){
+        while (true) {
             System.out.println("Добро пожаловать в меню");
             System.out.println("1. Меню книг");
             System.out.println("2. Меню пользователей");
@@ -59,7 +60,7 @@ public class Menu {
             int choice = scanner.nextInt();
             scanner.nextLine();
 
-            if (choice == 0){
+            if (choice == 0) {
                 System.out.println("До свидания!");
 
                 System.exit(0);
@@ -69,7 +70,7 @@ public class Menu {
         }
     }
 
-    private void showSubMenu(int choice){
+    private void showSubMenu(int choice) {
         switch (choice) {
             case 1:
                 showBookMenu();
@@ -94,8 +95,8 @@ public class Menu {
         }
     }
 
-    private void showBookMenu(){
-        while (true){
+    private void showBookMenu() {
+        while (true) {
             System.out.println("Список книг");
             System.out.println("1. Список всех книг");
             System.out.println("2. Список всех свободных книг");
@@ -112,10 +113,10 @@ public class Menu {
         }
     }
 
-    private void handleBookMenuChoice(int input){
+    private void handleBookMenuChoice(int input) {
         switch (input) {
             case 1:
-                System.out.println("Метод в разработке. Приходите завтра"); //дописать
+                showAllBooksListMenu();
 
                 waitRead();
 
@@ -137,33 +138,58 @@ public class Menu {
         }
     }
 
-    private void showFreeBooksListMenu(){
-        while (true){
+    //TODO проверить меня (Алла) ибо я не уверена
+    private void showAllBooksListMenu() {
+        while (true) {
+            System.out.println("Список всех книг библиотеки");
+
+            MyList<Book> allBooks = service.getAllBooks();
+
+            for (int index = 0; index < allBooks.size(); index++) {
+                int bookNumber = (index + 1);
+                Book book = allBooks.get(index);
+                System.out.println(bookNumber + ". " + book.getId() + ", " + book.getTitle() + "\", " + book.getAuthor());
+            }
+
+            System.out.println("0. Вернуться в предыдущее меню");
+
+            int allBookInput = scanCorrectIntFromUser(allBooks.size());
+
+            if (allBookInput == 0) break;
+
+            Book chosenBook = allBooks.get(allBookInput - 1);
+
+            showFreeBookMenu(chosenBook);
+        }
+    }
+
+    private void showFreeBooksListMenu() {
+        while (true) {
             System.out.println("Список свободных книг:");
 
             MyList<Book> freeBooks = service.getAllFreeBooks();
             for (int index = 0; index < freeBooks.size(); index++) {
                 int bookNumber = (index + 1);
                 Book book = freeBooks.get(index);
-                System.out.println(bookNumber + ". \"" + book.getTitle() + "\", " + book.getAuthor());
+                System.out.println(bookNumber + ". " + book.getId() + ", " + book.getTitle() + "\", " + book.getAuthor());
             }
 
             System.out.println("0. Вернуться в предыдущее меню");
 
-            int freeBookInput = scanCorrectIntFromUser(freeBooks.size());
+            int allBookInput = scanCorrectIntFromUser(freeBooks.size());
 
-            if (freeBookInput == 0) break;
+            if (allBookInput == 0) break;
 
-            Book chosenBook = freeBooks.get(freeBookInput - 1);
+            Book chosenBook = freeBooks.get(allBookInput - 1);
 
             showFreeBookMenu(chosenBook);
         }
     }
 
 
-    private void showFreeBookMenu(Book book){
+    private void showFreeBookMenu(Book book) {
         System.out.println("Список свободных книг:");
-        while (true){
+        while (true) {
             System.out.println("Книга: \"" + book.getTitle() + "\", " + book.getAuthor());
             System.out.println("1. Взять");
             System.out.println("0. Вернуться в предыдущее меню");
@@ -180,9 +206,9 @@ public class Menu {
         }
     }
 
-    private void returnBookMenu (Book book){
+    private void returnBookMenu(Book book) {
         System.out.println("Вернуть книгу:");
-        while (true){
+        while (true) {
             System.out.println("Книга: \"" + book.getTitle() + "\", " + book.getAuthor());
             System.out.println("1. Вернуть");
             System.out.println("0. Вернуться в предыдущее меню");
@@ -197,9 +223,9 @@ public class Menu {
         }
     }
 
-    private void showBusyBooksListMenu(){
+    private void showBusyBooksListMenu() {
         System.out.println("Список занятых книг:");
-        while (true){
+        while (true) {
 
             MyList<Book> busyBooks = service.getAllBusyBooks();
             for (int index = 0; index < busyBooks.size(); index++) {
@@ -220,8 +246,8 @@ public class Menu {
         }
     }
 
-    private void showUserMenu(){
-        while (true){
+    private void showUserMenu() {
+        while (true) {
             System.out.println("Меню пользователя");
             System.out.println("1. Вход в систему");
             System.out.println("2. Регистрация нового пользователя");
@@ -237,7 +263,7 @@ public class Menu {
         }
     }
 
-    private void handleUserMenuChoice(int input){
+    private void handleUserMenuChoice(int input) {
         switch (input) {
             case 1:
                 // Подтягиваем авторизацию
@@ -295,8 +321,8 @@ public class Menu {
     }
 
 
-    private void showAdminMenu(){
-        while (true){
+    private void showAdminMenu() {
+        while (true) {
             System.out.println("Меню админа");
             System.out.println("1. Добавить книгу");
             System.out.println("2. Удалить книгу");
@@ -311,7 +337,8 @@ public class Menu {
             handleAdminMenuChoice(input);
         }
     }
-    private void handleAdminMenuChoice(int input){
+
+    private void handleAdminMenuChoice(int input) {
         switch (input) {
             case 1:
                 addBook();
@@ -329,6 +356,7 @@ public class Menu {
                 System.out.println("\nНеверный ввод");
         }
     }
+
     private void addBook() {
 
         System.out.println("Добавить новую книгу");
@@ -351,10 +379,10 @@ public class Menu {
 
     }
 
-    private void deleteBook(){
+    private void deleteBook() {
         System.out.println("Удалить книгу");
 
-        while (true){
+        while (true) {
             System.out.println("Введите ID книги, которую надо удалить: ");
 
             int bookID = scanner.nextInt();
@@ -374,11 +402,12 @@ public class Menu {
             service.deleteBook(book);
 
             System.out.println("Книга \"" + book.getTitle() + "\", " + book.getAuthor() + "\", " + book.getGenre()
-                    + "\", " +  " успешно удалена.");
+                    + "\", " + " успешно удалена.");
         }
 
     }
-    private void whoHasBook(){
+
+    private void whoHasBook() {
 
         System.out.println("У какого читателя находится книга: ");
         System.out.println("Введите ID книги: ");
@@ -390,7 +419,7 @@ public class Menu {
         User user = service.whoHasBook(bookID);
 
         System.out.println("Книга \"" + book.getTitle() + "\", " + book.getAuthor() + ", " + book.getGenre()
-               + " находится у читателя c email " + user.getEmail());
+                + " находится у читателя c email " + user.getEmail());
 
     }
 
