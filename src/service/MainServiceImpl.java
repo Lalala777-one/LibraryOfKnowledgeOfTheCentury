@@ -32,7 +32,7 @@ public class MainServiceImpl implements MainService {
             return;
         }
         if (repositoryBook.getBookByTitle(title) != null) {
-            System.out.println("Книга з таким названием уже существует.");
+            System.out.println("Книга з таким названием уже существует");
             return;
         }
         repositoryBook.addBook(title, author, genre);
