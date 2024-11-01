@@ -12,13 +12,6 @@ public class Menu {
     private final MainService service;
     private final Scanner scanner = new Scanner(System.in);
 
-    private final static String COLOR_BLACK = "\u001B[0m";
-
-    public static final String COLOR_RESET = "\u001B[0m";
-    public static final String COLOR_YELLOW = "\u001B[33m";
-    public static final String COLOR_BLUE = "\u001B[34m";
-    public static final String COLOR_WHITE = "\u001B[37m";
-
     public Menu(MainService service) {
         this.service = service;
     }
@@ -54,18 +47,18 @@ public class Menu {
 
     private void showMenu() {
         while (true){
-            System.out.println(Color.BLUE + "Добро пожаловать в меню" + COLOR_RESET);
-            System.out.println(Color.BLUE + "1. Меню книг" + COLOR_RESET);
-            System.out.println(Color.BLUE + "2. Меню пользователей" + COLOR_RESET);
-            System.out.println(Color.BLUE + "3. Меню администратора" + COLOR_RESET);
-            System.out.println(Color.BLUE + "0. Выход из системы" + COLOR_RESET);
-            System.out.println(Color.YELLOW + "\nВведите пункт меню:" + COLOR_RESET);
+            System.out.println("Добро пожаловать в меню");
+            System.out.println("1. Меню книг");
+            System.out.println("2. Меню пользователей");
+            System.out.println("3. Меню администратора");
+            System.out.println("0. Выход из системы");
+            System.out.println("\nВведите пункт меню:");
 
             int choice = scanner.nextInt();
             scanner.nextLine();
 
             if (choice == 0){
-                System.out.println(Color.YELLOW + "До свидания!" + COLOR_RESET);
+                System.out.println("До свидания!");
 
                 System.exit(0);
             }
@@ -95,19 +88,19 @@ public class Menu {
 
                 break;
             default:
-                System.out.println(Color.YELLOW + "Сделайте корректный выбор\n" + COLOR_RESET);
+                System.out.println("Сделайте корректный выбор\n");
         }
     }
 
     private void showBookMenu(){
         while (true){
-            System.out.println(Color.BLUE + "Список книг" + COLOR_RESET);
-            System.out.println(Color.BLUE + "1. Список всех книг" + COLOR_RESET);
-            System.out.println(Color.BLUE + "2. Список всех свободных книг" + COLOR_RESET);
-            System.out.println(Color.BLUE + "3. Список всех занятых книг" + COLOR_RESET);
-            System.out.println(Color.BLUE + "0. Вернуться в предыдущее меню" + COLOR_RESET);
+            System.out.println("Список книг");
+            System.out.println("1. Список всех книг");
+            System.out.println("2. Список всех свободных книг");
+            System.out.println("3. Список всех занятых книг");
+            System.out.println("0. Вернуться в предыдущее меню");
 
-            System.out.println(Color.YELLOW + "\n Сделайте выбор пункта меню" + COLOR_RESET);
+            System.out.println("\n Сделайте выбор пункта меню");
             int input = scanCorrectIntFromUser(3);
             scanner.nextLine();
 
@@ -227,13 +220,13 @@ public class Menu {
 
     private void showUserMenu(){
         while (true){
-            System.out.println(Color.BLUE + "Меню пользователя" + COLOR_RESET);
-            System.out.println(Color.BLUE + "1. Вход в систему" + COLOR_RESET);
-            System.out.println(Color.BLUE + "2. Регистрация нового пользователя" + COLOR_RESET);
-            System.out.println(Color.BLUE + "3. Logout" + COLOR_RESET);
-            System.out.println(Color.BLUE + "0. Вернуться в предыдущее меню" + COLOR_RESET);
+            System.out.println("Меню пользователя");
+            System.out.println("1. Вход в систему");
+            System.out.println("2. Регистрация нового пользователя");
+            System.out.println("3. Logout");
+            System.out.println("0. Вернуться в предыдущее меню");
 
-            System.out.println(Color.YELLOW + "\n Сделайте выбор пункта меню" + COLOR_RESET);
+            System.out.println("\n Сделайте выбор пункта меню");
             int input = scanCorrectIntFromUser(3);
 
             if (input == 0) break;
