@@ -114,6 +114,11 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public void deleteBook(Book book) {
+        if (book == null) {
+            System.out.println("Книга не может быть null");
+            return;
+        }
+
         if (activeUser == null || activeUser.getRole() != Role.USER) {
             System.out.println("Доступно только Администраторам");
             return;
