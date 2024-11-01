@@ -52,7 +52,7 @@ class MainServiceImplTest {
         mainService.addBook("Гарри Поттер и Орден Феникса", "Дж.К. Роулинг", "фэнтези");
 
         Book addedBook = bookRepository.getBookByTitle("Гарри Поттер и Принц-полукровка");
-        assertNull(addedBook, "Книга не может быть добавлена пользователем без прав администратора");
+        assertNull(addedBook, "Книга не может быть добавлена пользователем без прав администратора!");
     }
 
     @Test
