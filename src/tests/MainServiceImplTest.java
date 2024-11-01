@@ -1,6 +1,7 @@
 package tests;
 
 import model.Book;
+import model.Role;
 import model.User;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -12,6 +13,9 @@ import repository.UserRepository;
 import repository.UserRepositoryImpl;
 import service.MainService;
 import service.MainServiceImpl;
+import utils.MyList;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,6 +33,65 @@ class MainServiceImplTest {
         userRepository.addUser("alla@gmail.com", "qwerty1Q$");
         mainService.loginUser("alla@gmail.com", "qwerty1Q$");
     }
+
+    @Test
+    public void testAddBook_AsAdmin() {
+        activeUser.setRole(Role.ADMIN);
+
+        mainService.addBook("Гарри Поттер и Принц-полукровка", "Дж.К. Роулинг", "фэнтези");
+
+        Book addedBook = bookRepository.getBookByTitle("Гарри Поттер и Принц-полукровка");
+        assertNotNull(addedBook, "Книга должна быть добавлена администраторами");
+        assertEquals("Гарри Поттер и Принц-полукровка", addedBook.getTitle(), "Название книги не соответствует ожиданиям");
+    }
+
+    @Test
+    public void testAddBook_NonAdminRole() {
+        activeUser.setRole(Role.USER);
+
+        mainService.addBook("Гарри Поттер и Орден Феникса", "Дж.К. Роулинг", "фэнтези");
+
+        Book addedBook = bookRepository.getBookByTitle("Гарри Поттер и Принц-полукровка");
+        assertNull(addedBook, "Книга не может быть добавлена пользователем без прав администратора");
+    }
+
+    @Test
+    public void testGetAllBooks() {
+        MyList<Book> allBooks = mainService.getAllBooks();
+
+        assertNotNull(allBooks, "Список книг не должен быть пустым");
+
+        int expectedBooksCount = 17;
+        assertEquals(expectedBooksCount, allBooks.size(), "Количество книг не соответствует ожидаемому");
+
+        // Дополнительная проверка: Убедимся, что каждый элемент в списке является книгой
+        for (Book book : allBooks) {
+            assertNotNull(book, "Каждый элемент в списке должен быть объектом книги");
+        }
+    }
+
+    @Test
+    public void testGetAllFreeBooks() {
+        MyList<Book> freeBooks = mainService.getAllFreeBooks();
+
+        for (Book book : freeBooks) {
+            assertFalse(book.isBusy(), "Книга должна быть свободной");
+        }
+    }
+
+    @Test
+    public void testGetBookByGenre() {
+        // Книги жанра "фэнтези"
+        MyList<Book> fantasyBooks = mainService.getBookByGenre("фэнтези");
+
+        for (Book book : fantasyBooks) {
+            assertEquals("фэнтези", book.getGenre());
+        }
+
+        // Проверяем, чтобы количество книг в списке соответствовало ожидаемому
+        assertEquals(5, fantasyBooks.size());
+    }
+
 
     //проверка на УСПЕШНЫЙ возрат книги
     @Test
