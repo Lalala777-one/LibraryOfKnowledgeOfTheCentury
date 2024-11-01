@@ -29,6 +29,8 @@ public class Menu {
             System.out.print("Введите число от 0 до " + maxInputInt + ": ");
             try {
                 number = scanner.nextInt();
+                scanner.nextLine();
+
 
                 if (number >= 0 && number <= maxInputInt) {
 
@@ -262,11 +264,11 @@ public class Menu {
                 System.out.println("Регистрация нового пользователя");
                 System.out.println("Введите email:");
                 String email1 = scanner.nextLine();
-                scanner.nextLine();
+//                scanner.nextLine(); Зачем?
 
                 System.out.println("Введите пароль");
                 String password1 = scanner.nextLine();
-                scanner.nextLine();
+//                scanner.nextLine();
 
                 User user = service.registerUser(email1, password1);
 
@@ -333,15 +335,15 @@ public class Menu {
 
         System.out.println("Введите название: ");
         String title = scanner.nextLine();
-        scanner.nextLine();
+//        scanner.nextLine();
 
         System.out.println("Введите автора: ");
         String author = scanner.nextLine();
-        scanner.nextLine();
+//        scanner.nextLine();
 
         System.out.println("Введите жанр: ");
         String genre = scanner.nextLine();
-        scanner.nextLine();
+//        scanner.nextLine();
 
         service.addBook(title, author, genre);
         System.out.println("Книга \"" + title + "\", " + author + "\", " + genre
