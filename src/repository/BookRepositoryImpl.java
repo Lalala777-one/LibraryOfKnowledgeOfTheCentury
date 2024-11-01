@@ -125,6 +125,8 @@ return null;
 
     @Override
     public void deleteBook(Book book) {
-        deleteBook(book);
+        // Ходим по кругу. Метод вызывает сам себя до новых веников
+//        deleteBook(book);
+        books.remove(book);
     }
 }

@@ -28,7 +28,9 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public void addBook(String title, String author, String genre) {
-        if (activeUser == null || activeUser.getRole() != Role.USER) {
+        // Книгу может добавлять только Админ?
+        if (activeUser == null || activeUser.getRole() != Role.ADMIN) {
+//        if (activeUser == null || activeUser.getRole() != Role.USER) {
             return;
         }
         if (repositoryBook.getBookByTitle(title) != null) {
@@ -119,7 +121,8 @@ public class MainServiceImpl implements MainService {
             return;
         }
 
-        if (activeUser == null || activeUser.getRole() != Role.USER) {
+        // Только админ. Значит должен быть пользователь с ролью ADMIN, а не какой-то другой
+        if (activeUser == null || activeUser.getRole() != Role.ADMIN) {
             System.out.println("Доступно только Администраторам");
             return;
         }
@@ -193,6 +196,8 @@ public class MainServiceImpl implements MainService {
         return true;
     }
 
+    // А каким образом сервис получит целого пользователя?
+    // Наверное админ в меню сможет выбрать из списка пользователя email? А тут уже искать пользователя по email?
     @Override
     public MyList<Book> getAllUsersBook(User user) {
         if (user == null && user.getRole() != Role.ADMIN) {
@@ -209,7 +214,8 @@ public class MainServiceImpl implements MainService {
             System.out.println("Пользователь не найден");
             return new MyArrayList<>();
         } else {
-            MyList<Book> usersBooks = repositoryUser.getAllUsersBook(user);
+            MyList<Book> usersBooks = user.getUserBooks();
+            //  MyList<Book> usersBooks = repositoryUser.getAllUsersBook(user);
             return usersBooks;
         }
     }
@@ -371,7 +377,7 @@ public class MainServiceImpl implements MainService {
         if (id <= 0) {
             System.out.println("Неверный ID книги");
             return;
-        } else {
+        }
             Book book = repositoryBook.getBookById(id);
             if (book == null) {
                 System.out.println("Книга с ID " + id + " не найдена");
@@ -389,7 +395,7 @@ public class MainServiceImpl implements MainService {
             if (newGenre != null && !newGenre.isEmpty()) book.setGenre(newGenre);
 
             System.out.println("Книга " + book + " успешно обновлена");
-        }
+
     }
 
     private String getInput(String call) {
