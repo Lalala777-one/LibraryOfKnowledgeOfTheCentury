@@ -29,7 +29,6 @@ public class MainServiceImpl implements MainService {
     @Override
     public void addBook(String title, String author, String genre) {
         if (activeUser == null || activeUser.getRole() != Role.USER) {
-            System.out.println("Добавление новой книги доступно только Администраторам.");
             return;
         }
         if (repositoryBook.getBookByTitle(title) != null) {
