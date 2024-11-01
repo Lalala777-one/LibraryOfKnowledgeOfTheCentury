@@ -28,7 +28,7 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public void addBook(String title, String author, String genre) {
-        if (activeUser == null || activeUser.getRole() != Role.ADMIN) {
+        if (activeUser == null || activeUser.getRole() != Role.USER) {
             System.out.println("Добавление новой книги доступно только Администраторам.");
             return;
         }
@@ -42,10 +42,6 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public MyList<Book> getAllBooks() {
-        if (activeUser == null) {
-            System.out.println("Пользователь не вошел в систему. Пожалуйста, войдите в систему для просмотра книг.");
-            return new MyArrayList<>();
-        }
         MyList<Book> books = repositoryBook.getAllBooks();
         System.out.println("Общее количество книг: " + books.size());
         return books;
@@ -53,10 +49,6 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public MyList<Book> getAllFreeBooks() {
-        if (activeUser == null) {
-            System.out.println("Пользователь не вошел в систему. Пожалуйста, войдите в систему для просмотра книг.");
-            return new MyArrayList<>();
-        }
         MyList<Book> freeBooks = repositoryBook.getAllFreeBooks();
         System.out.println("Количество свободных книг: " + freeBooks.size());
         return freeBooks;
@@ -64,10 +56,6 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public MyList<Book> getAllBusyBooks() {
-        if (activeUser == null) {
-            System.out.println("Пользователь не вошел в систему. Пожалуйста, войдите в систему для просмотра книг.");
-            return new MyArrayList<>();
-        }
         MyList<Book> busyBooks = repositoryBook.getAllBusyBooks();
         System.out.println("Количество занятых книг: " + busyBooks.size());
         return busyBooks;
@@ -75,10 +63,6 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public Book getBookById(int id) {
-        if (activeUser == null) {
-            System.out.println("Пользователь не вошел в систему. Пожалуйста, войдите в систему для просмотра книг.");
-            return null;
-        }
         if (id <= 0) {
             System.out.println("Неверный идентификатор книги.");
             return null;
@@ -92,10 +76,6 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public MyList<Book> getBookByAuthor(String author) {
-        if (activeUser == null) {
-            System.out.println("Пользователь не вошел в систему. Пожалуйста, войдите в систему для просмотра книг.");
-            return null;
-        }
         if (author == null || author.isEmpty()) {
             System.out.println("Имя автора не может быть пустым.");
             return null;
@@ -109,10 +89,6 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public Book getBookByTitle(String title) {
-        if (activeUser == null) {
-            System.out.println("Пользователь не вошел в систему. Пожалуйста, войдите в систему для просмотра книг.");
-            return null;
-        }
         if (title == null || title.isEmpty()) {
             System.out.println("Название книги не может быть пустым.");
             return null;
@@ -126,10 +102,6 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public MyList<Book> getBookByGenre(String genre) {
-        if (activeUser == null) {
-            System.out.println("Пользователь не вошел в систему. Пожалуйста, войдите в систему для просмотра книг.");
-            return null;
-        }
         if (genre == null || genre.isEmpty()) {
             System.out.println("Жанр не может быть пустым.");
             return null;
@@ -143,7 +115,7 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public void deleteBook(Book book) {
-        if (activeUser == null || activeUser.getRole() != Role.ADMIN) {
+        if (activeUser == null || activeUser.getRole() != Role.USER) {
             System.out.println("Доступно только Администраторам");
             return;
         }

@@ -27,7 +27,7 @@ public class BookRepositoryImpl implements BookRepository {
                 new Book(currentId.getAndIncrement(), "Гордость и предубеждение", "Джейн Остин","роман"),
                 new Book(currentId.getAndIncrement(), "О дивный новый мир", "Олдос Хаксли", "антиутопия"),
                 new Book(currentId.getAndIncrement(), "1984", "Джордж Оруэлл", "антиутопия"),
-                new Book(currentId.getAndIncrement(), "Цветы для Элджернона", "Дэниел Киз", " научная фантастика"),
+                new Book(currentId.getAndIncrement(), "Цветы для Элджернона", "Дэниел Киз", "научная фантастика"),
                 new Book(currentId.getAndIncrement(), "Книжный вор", "Маркус Зусак", "исторический роман"),
                 new Book(currentId.getAndIncrement(),"Три товарища", "Эрих Мария Ремарк", "роман" ),
                 new Book(currentId.getAndIncrement(),"Американские боги", "Нил Гейман", "фэнтези"),
