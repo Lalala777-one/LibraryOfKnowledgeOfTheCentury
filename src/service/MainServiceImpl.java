@@ -246,7 +246,7 @@ public class MainServiceImpl implements MainService {
         }
 
         // проверяем, принадлежит ли книга  активному пользователю
-        if(!activeUser.getUserBooks().contains(book)) {
+        if (!activeUser.getUserBooks().contains(book)) {
             System.out.println("Книга не находится у активного пользователя");
             return false;
         }
@@ -424,7 +424,6 @@ public class MainServiceImpl implements MainService {
             return false;
         } else {
             activeUser = null;
-            System.out.println("До новых встреч в нашей библиотеке");
         }
         return true;
     }
@@ -439,23 +438,23 @@ public class MainServiceImpl implements MainService {
             System.out.println("Неверный ID книги");
             return;
         }
-            Book book = repositoryBook.getBookById(id);
-            if (book == null) {
-                System.out.println("Книга с ID " + id + " не найдена");
-                return;
-            }
+        Book book = repositoryBook.getBookById(id);
+        if (book == null) {
+            System.out.println("Книга с ID " + id + " не найдена");
+            return;
+        }
 
-            // Получение новых значений из пользовательского интерфейса или консоли
-            String newTitle = getInput("Введите новое название книги: ");
-            String newAuthor = getInput("Введите нового автора книги: ");
-            String newGenre = getInput("Введите новый жанр книги: ");
+        // Получение новых значений из пользовательского интерфейса или консоли
+        String newTitle = getInput("Введите новое название книги: ");
+        String newAuthor = getInput("Введите нового автора книги: ");
+        String newGenre = getInput("Введите новый жанр книги: ");
 
-            // Обновление параметров книги
-            if (newTitle != null && !newTitle.isEmpty()) book.setTitle(newTitle);
-            if (newAuthor != null && !newAuthor.isEmpty()) book.setAuthor(newAuthor);
-            if (newGenre != null && !newGenre.isEmpty()) book.setGenre(newGenre);
+        // Обновление параметров книги
+        if (newTitle != null && !newTitle.isEmpty()) book.setTitle(newTitle);
+        if (newAuthor != null && !newAuthor.isEmpty()) book.setAuthor(newAuthor);
+        if (newGenre != null && !newGenre.isEmpty()) book.setGenre(newGenre);
 
-            System.out.println("Книга " + book + " успешно обновлена");
+        System.out.println("Книга " + book + " успешно обновлена");
 
     }
 
