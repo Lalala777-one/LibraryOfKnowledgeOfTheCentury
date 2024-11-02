@@ -16,7 +16,7 @@ public class Menu {
     }
 
     private void waitRead() {
-        System.out.println("\n Для продожения нажмите enter");
+        System.out.println("\nДля продожения нажмите enter");
         scanner.nextLine();
     }
 
@@ -30,9 +30,7 @@ public class Menu {
                 number = scanner.nextInt();
                 scanner.nextLine();
 
-
                 if (number >= 0 && number <= maxInputInt) {
-
                     return number;
                 } else {
                     System.out.println("Ошибка: число должно быть от 0 до " + maxInputInt + ".");
@@ -52,7 +50,7 @@ public class Menu {
         while (true) {
             System.out.println("Добро пожаловать в меню");
             System.out.println("1. Меню книг");
-            System.out.println("2. Меню пользователей");
+            System.out.println("2. Меню пользователя");
             System.out.println("3. Меню администратора");
             System.out.println("0. Выход из системы");
             System.out.println("\nВведите пункт меню:");
@@ -98,14 +96,17 @@ public class Menu {
     private void showBookMenu() {
         while (true) {
             System.out.println("Список книг");
-            System.out.println("1. Список всех книг");
+            System.out.println("1. Список всех книг библиотеки");
             System.out.println("2. Список всех свободных книг");
             System.out.println("3. Список всех занятых книг");
+            System.out.println("4. Найти книгу по ID");
+            System.out.println("5. Найти книгу по автору");
+            System.out.println("6. Найти книгу по названию");
+            System.out.println("7. Найти книгу по жанру");
             System.out.println("0. Вернуться в предыдущее меню");
 
-            System.out.println("\n Сделайте выбор пункта меню");
-            int input = scanCorrectIntFromUser(3);
-            scanner.nextLine();
+            System.out.println("\nСделайте выбор пункта меню");
+            int input = scanCorrectIntFromUser(7);
 
             if (input == 0) break;
 
@@ -117,28 +118,38 @@ public class Menu {
         switch (input) {
             case 1:
                 showAllBooksListMenu();
-
                 waitRead();
-
                 break;
             case 2:
                 showFreeBooksListMenu();
-
                 waitRead();
-
                 break;
             case 3:
                 showBusyBooksListMenu();
-
                 waitRead();
-
+                break;
+            case 4:
+                findBookById();
+                waitRead();
+                break;
+            case 5:
+                findBookByAuthor();
+                waitRead();
+                break;
+            case 6:
+                findBookByTitle();
+                waitRead();
+                break;
+            case 7:
+                findBookByGenre();
+                waitRead();
                 break;
             default:
                 System.out.println("\nНеверный ввод");
         }
+
     }
 
-    //TODO проверить меня (Алла) ибо я не уверена
     private void showAllBooksListMenu() {
         while (true) {
             System.out.println("Список всех книг библиотеки");
@@ -148,7 +159,7 @@ public class Menu {
             for (int index = 0; index < allBooks.size(); index++) {
                 int bookNumber = (index + 1);
                 Book book = allBooks.get(index);
-                System.out.println(bookNumber + ". " + book.getId() + ", " + book.getTitle() + "\", " + book.getAuthor());
+                System.out.println(book.toString());
             }
 
             System.out.println("0. Вернуться в предыдущее меню");
@@ -168,10 +179,11 @@ public class Menu {
             System.out.println("Список свободных книг:");
 
             MyList<Book> freeBooks = service.getAllFreeBooks();
+
             for (int index = 0; index < freeBooks.size(); index++) {
                 int bookNumber = (index + 1);
                 Book book = freeBooks.get(index);
-                System.out.println(bookNumber + ". " + book.getId() + ", " + book.getTitle() + "\", " + book.getAuthor());
+                System.out.println(book.toString());
             }
 
             System.out.println("0. Вернуться в предыдущее меню");
@@ -185,7 +197,6 @@ public class Menu {
             showFreeBookMenu(chosenBook);
         }
     }
-
 
     private void showFreeBookMenu(Book book) {
         System.out.println("Список свободных книг:");
@@ -228,6 +239,7 @@ public class Menu {
         while (true) {
 
             MyList<Book> busyBooks = service.getAllBusyBooks();
+
             for (int index = 0; index < busyBooks.size(); index++) {
                 int bookNumber = (index + 1);
                 Book book = busyBooks.get(index);
@@ -246,6 +258,177 @@ public class Menu {
         }
     }
 
+    private void findBookById() {
+        System.out.println("Введите ID книги:");
+        int inputedId = scanner.nextInt();
+        scanner.nextLine();
+
+        if (inputedId < 0) {
+            System.out.println("ID книги должен быть больше 0");
+            return;
+        }
+
+        Book book = service.getBookById(inputedId);
+
+        if (book == null) {
+            System.out.println("Книга с таким ID не найдена");
+        } else {
+            System.out.println("Книга с ID " + inputedId + ":");
+            System.out.println(book.toString());
+        }
+
+        //проверяем, не занята ли книга
+        if (book.isBusy()) {
+            System.out.println("Эта книга находится у другого читателя");
+        } else {
+            System.out.println("0. Вернуться в предыдущее меню");
+            System.out.println("1. Взять книгу");
+        }
+        int choice = scanCorrectIntFromUser(1);
+        if (choice == 1) {
+            boolean successTakeBook = service.takeBook(inputedId);
+        } else {
+            System.out.println("Не удалось взять книгу");
+        }
+    }
+
+    private void findBookByAuthor() {
+        System.out.println("Введите автора книги: ");
+        String inputedAuthor = scanner.nextLine();
+        if (inputedAuthor == null) {
+            System.out.println("Автор не введен");
+            return;
+        }
+        if (inputedAuthor.isEmpty()) {
+            System.out.println("Строка не должна быть пустой");
+            return;
+        }
+
+        MyList<Book> books = service.getBookByAuthor(inputedAuthor);
+
+        if (books == null || books.isEmpty()) {
+            System.out.println("Книги данного автора не найдены");
+        } else {
+            System.out.println("Книги автора " + inputedAuthor + ":");
+            for (Book book : books) {
+                System.out.println(book.toString());
+            }
+        }
+
+        //проверяем, не занята ли книга
+        System.out.println();
+        System.out.println("Список свободных книг этого автора");
+        for (Book book : books) {
+            if (book.isBusy()) {
+                System.out.println("Книга (занята): id: " + book.getId() + "; название: " + book.getTitle() + "; жанр: " + book.getGenre());
+            } else {
+                System.out.println("Книга (свободна): id: " + book.getId() + "; название: " + book.getTitle() + "; жанр: " + book.getGenre());
+            }
+        }
+
+        System.out.println("0. Вернуться в предыдущее меню");
+        System.out.println("1. Взять книгу");
+        int choice = scanCorrectIntFromUser(1);
+        if (choice == 1) {
+            System.out.println("Введите id книги: ");
+            int bookId = scanner.nextInt();
+            scanner.nextLine();
+            boolean successTakeBook = service.takeBook(bookId);
+        } else {
+            System.out.println("Не удалось взять книгу");
+        }
+    }
+
+    private void findBookByTitle() {
+        System.out.println("Введите название книги: ");
+        String inputTitle = scanner.nextLine();
+        if (inputTitle == null) {
+            System.out.println("Ошибка: название книги не указано");
+            return;
+        }
+        if (inputTitle.isEmpty()) {
+            System.out.println("Строка не должна быть пустой");
+            return;
+        }
+
+        Book book = service.getBookByTitle(inputTitle);
+
+        if (book == null) {
+            System.out.println("Книга с таким названием не найдена");
+            return;
+        } else {
+            System.out.println("Найдена книга с названием: " + inputTitle);
+            System.out.println(book.toString());
+        }
+        //проверяем, не занята ли книга
+        if (book.isBusy()) {
+            System.out.println("Книга (занята): id: " + book.getId() + "; название: " + book.getTitle() + "; жанр: " + book.getGenre());
+        }
+
+        System.out.println("0. Вернуться в предыдущее меню");
+        System.out.println("1. Взять книгу");
+        int choice = scanCorrectIntFromUser(1);
+        if (choice == 1) {
+            System.out.println("Введите id книги:");
+            int bookId = scanner.nextInt();
+            scanner.nextLine();
+            boolean successTakeBook = service.takeBook(bookId);
+        } else {
+            System.out.println("Не удалось взять книгу");
+        }
+    }
+
+    private void findBookByGenre() {
+        System.out.println("Введите жанр:");
+        String inputGenre = scanner.nextLine();
+
+        if (inputGenre == null) {
+            System.out.println("Жанр не введён");
+            return;
+        }
+        if (inputGenre.isEmpty()) {
+            System.out.println("Строка не должна быть пустой");
+            return;
+        }
+
+        MyList<Book> books = service.getBookByGenre(inputGenre);
+
+        if (books == null || books.isEmpty()) {
+            System.out.println("Книги данного жанра не найдены!");
+            return;
+        } else {
+            System.out.println("Список найденных книг жанра - " + inputGenre + ":");
+            for (Book book : books) {
+                System.out.println(book.toString());
+            }
+        }
+
+        //проверяем, не заняты ли книги
+        System.out.println();
+        System.out.println("Список свободных книг этого жанра:");
+        for (Book book : books) {
+            if(book.isBusy()) {
+                System.out.println("Книга (занята): id: " + book.getId() + "; название: " + book.getTitle() + "; жанр: " + book.getGenre());
+            } else {
+                System.out.println("Книга (свободна): id: " + book.getId() + "; название: " + book.getTitle() + "; жанр: " + book.getGenre());
+            }
+        }
+
+        System.out.println("0. Вернуться в предыдущее меню");
+        System.out.println("1. Взять книгу");
+        int choice = scanCorrectIntFromUser(1);
+        if (choice == 1) {
+            System.out.println("Введите id книги: ");
+            int bookId = scanner.nextInt();
+            scanner.nextLine();
+            boolean successTakeBook = service.takeBook(bookId);
+        } else {
+            System.out.println("Не удалось взять книгу");
+        }
+
+
+    }
+
     private void showUserMenu() {
         while (true) {
             System.out.println("Меню пользователя");
@@ -254,7 +437,7 @@ public class Menu {
             System.out.println("3. Logout");
             System.out.println("0. Вернуться в предыдущее меню");
 
-            System.out.println("\n Сделайте выбор пункта меню");
+            System.out.println("\nСделайте выбор пункта меню");
             int input = scanCorrectIntFromUser(3);
 
             if (input == 0) break;
@@ -269,50 +452,44 @@ public class Menu {
                 // Подтягиваем авторизацию
                 System.out.println("Введите ваш email:");
                 String email = scanner.nextLine();
-                scanner.nextLine();
 
                 System.out.println("Введите ваш пароль:");
                 String password = scanner.nextLine();
-                scanner.nextLine();
 
                 boolean isLoggedIn = service.loginUser(email, password);
 
                 if (isLoggedIn) {
-                    System.out.println("Вы успешно вошли в систему.");
+                    System.out.println("Добро пожаловать в ЗНАНИЯ ВЕКА!");
+                    //TODO добавить выход в меню книг
+                    showBookMenu();
                 } else {
-                    System.out.println("Неверный email или пароль. Попробуйте снова.");
+                    System.out.println("Неверный email или пароль. Попробуйте снова");
                 }
-
                 waitRead();
-
                 break;
             case 2:
                 System.out.println("Регистрация нового пользователя");
                 System.out.println("Введите email:");
                 String email1 = scanner.nextLine();
-//                scanner.nextLine(); Зачем?
 
                 System.out.println("Введите пароль");
                 String password1 = scanner.nextLine();
-//                scanner.nextLine();
 
                 User user = service.registerUser(email1, password1);
 
                 if (user != null) {
                     System.out.println("Вы успешно зарегистрировались в системе");
+                    System.out.println("Предлагаем вам перейти к выбору книги)");
+                    showBookMenu();
                 } else {
                     System.out.println("Регистрация провалена!");
                 }
-
                 waitRead();
-
                 break;
             case 3:
                 service.logOutUser();
                 System.out.println("Вы вышли из системы");
-
                 waitRead();
-
                 break;
             default:
                 System.out.println("\nНеверный ввод");

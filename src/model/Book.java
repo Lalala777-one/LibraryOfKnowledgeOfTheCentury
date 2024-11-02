@@ -58,12 +58,12 @@ public class Book {
 
     @Override
     public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", author='" + author + '\'' +
-                ", isBusy=" + isBusy +
-                ", genre " + genre +
+        return "Книга {" +
+                "id: " + id +
+                "; название: " + title +
+                "; автор: " + author +
+                "; жанр: " + genre +
+                "; занята: " + isBusy +
                 '}';
     }
 
