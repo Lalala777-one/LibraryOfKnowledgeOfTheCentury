@@ -351,7 +351,7 @@ public class MainServiceImpl implements MainService {
 
         // Установить пользователя как активного
         this.activeUser = user;
-        System.out.println("Добро пожаловать в ЗНАНИЯ ВЕКА!");
+        //System.out.println("Добро пожаловать в ЗНАНИЯ ВЕКА!"); // теперь в сервисе
 
         return true;
     }
