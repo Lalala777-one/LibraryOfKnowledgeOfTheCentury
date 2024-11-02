@@ -349,18 +349,26 @@ public class Menu {
             return;
         }
 
-        Book book = service.getBookByTitle(inputTitle);
+        MyList<Book> books = service.getBookByTitle(inputTitle);
 
-        if (book == null) {
-            System.out.println("Книга с таким названием не найдена");
-            return;
+        if (books == null || books.isEmpty()) {
+            System.out.println("Книги с таким названием не найдены");
         } else {
-            System.out.println("Найдена книга с названием: " + inputTitle);
-            System.out.println(book.toString());
+            System.out.println("Книги с названием " + inputTitle + ":");
+            for (Book book : books) {
+                System.out.println(book.toString());
+            }
         }
+
         //проверяем, не занята ли книга
-        if (book.isBusy()) {
-            System.out.println("Книга (занята): id: " + book.getId() + "; название: " + book.getTitle() + "; жанр: " + book.getGenre());
+        System.out.println();
+        System.out.println("Список свободных книг этого автора");
+        for (Book book : books) {
+            if (book.isBusy()) {
+                System.out.println("Книга (занята): id: " + book.getId() + "; название: " + book.getTitle() + "; жанр: " + book.getGenre());
+            } else {
+                System.out.println("Книга (свободна): id: " + book.getId() + "; название: " + book.getTitle() + "; жанр: " + book.getGenre());
+            }
         }
 
         System.out.println("0. Вернуться в предыдущее меню");
