@@ -17,7 +17,7 @@ public interface BookRepository {
 
     MyList<Book> getBookByAuthor(String author);
 
-    Book getBookByTitle(String title);
+    MyList<Book> getBookByTitle(String title);
 
     MyList<Book> getBookByGenre(String genre);
 

@@ -28,37 +28,61 @@ public class MainServiceImpl implements MainService {
 
     @Override
     public void addBook(String title, String author, String genre) {
-        // Книгу может добавлять только Админ?
         if (activeUser == null || activeUser.getRole() != Role.ADMIN) {
-//        if (activeUser == null || activeUser.getRole() != Role.USER) {
+            System.out.println("Добавление новой книги доступно только Администраторам.");
+            return;
+        }
+        if (!title.matches("^[\\p{L}0-9\\s`\\-.,!?()&]+$")) {
+            System.out.println("Название книги может содержать только буквы, цифры, пробелы и допустимые специальные символы: '-.,!?");
+            return;
+        }
+        if (!author.matches("^[\\p{L}\\s`\\-]+$")) {
+            System.out.println("Имя автора может содержать только буквы, пробелы и допустимые специальные символы: '-");
+            return;
+        }
+        if (!genre.matches("^[a-zA-Z\\s]+$")) {
+            System.out.println("Жанр может содержать только буквы и пробелы.");
             return;
         }
         if (repositoryBook.getBookByTitle(title) != null) {
             System.out.println("Книга з таким названием уже существует.");
             return;
         }
-        repositoryBook.addBook(title, author, genre);
-        System.out.println("Книга успешно добавлена: " + title);
+
+        try {
+            repositoryBook.addBook(title, author, genre);
+            System.out.println("Книга успешно добавлена: " + title);
+        } catch (Exception e) {
+            System.out.println("Ошибка при добавлении книги: " + e);
+        }
     }
 
     @Override
     public MyList<Book> getAllBooks() {
         MyList<Book> books = repositoryBook.getAllBooks();
-        System.out.println("Общее количество книг: " + books.size());
+        if (books.isEmpty()) {
+            System.out.println("Список книг пуст.");
+        }else {
+            System.out.println("Общее количество книг: " + books.size());
+        }
         return books;
     }
 
     @Override
     public MyList<Book> getAllFreeBooks() {
         MyList<Book> freeBooks = repositoryBook.getAllFreeBooks();
-        System.out.println("Количество свободных книг: " + freeBooks.size());
+        if (freeBooks.isEmpty()) {
+            System.out.println("В данный момент нет доступных книг.");
+        }
         return freeBooks;
     }
 
     @Override
     public MyList<Book> getAllBusyBooks() {
         MyList<Book> busyBooks = repositoryBook.getAllBusyBooks();
-        System.out.println("Количество занятых книг: " + busyBooks.size());
+        if (busyBooks.isEmpty()) {
+            System.out.println("В данный момент нет занятых книг.");
+        }
         return busyBooks;
     }
 
@@ -81,25 +105,47 @@ public class MainServiceImpl implements MainService {
             System.out.println("Имя автора не может быть пустым.");
             return null;
         }
-        MyList<Book> booksByAuthor = repositoryBook.getBookByAuthor(author);
+
+        MyList<Book> booksByAuthor =  new MyArrayList<>();
+        MyList<Book> allBooks = repositoryBook.getAllBooks(); // get all books
+
+        for (Book book : allBooks) { // check all matches by author
+            if (book.getAuthor().toLowerCase().contains(author.toLowerCase())) {
+                booksByAuthor.add(book);
+            }
+        }
         if (booksByAuthor.isEmpty()) {
             System.out.println("Книги автора " + author + " не найдены.");
+        } else {
+            System.out.println("Найдено книг автора: " + booksByAuthor.size());
         }
         return booksByAuthor;
     }
 
     @Override
-    public Book getBookByTitle(String title) {
+    public MyList<Book> getBookByTitle(String title) {
         if (title == null || title.isEmpty()) {
             System.out.println("Название книги не может быть пустым.");
             return null;
         }
-        Book book = repositoryBook.getBookByTitle(title);
-        if (book == null) {
-            System.out.println("Книга с таким названием не найдена.");
+
+        MyList<Book> booksByTitle = new MyArrayList<>();
+        MyList<Book> allBooks = repositoryBook.getAllBooks();
+
+        for (Book book : allBooks) {
+            if (book.getTitle().toLowerCase().contains(title.toLowerCase())) {
+                booksByTitle.add(book);
+            }
         }
-        return book;
+
+        if (booksByTitle.isEmpty()) {
+            System.out.println("Книги с названием \\\"\" + title + \"\\\" не найдены.");
+        } else {
+            System.out.println("Найдено книг с подобным названием: " + booksByTitle.size());
+        }
+        return booksByTitle;
     }
+
 
     @Override
     public MyList<Book> getBookByGenre(String genre) {
@@ -107,9 +153,20 @@ public class MainServiceImpl implements MainService {
             System.out.println("Жанр не может быть пустым.");
             return null;
         }
-        MyList<Book> booksByGenre = repositoryBook.getBookByGenre(genre);
+
+        MyList<Book> booksByGenre =  new MyArrayList<>();
+        MyList<Book> allBooks = repositoryBook.getAllBooks();
+
+        for (Book book : allBooks) {
+            if (book.getGenre().toLowerCase().contains(genre.toLowerCase())) {
+                booksByGenre.add(book);
+            }
+        }
+
         if (booksByGenre.isEmpty()) {
-            System.out.println("Книги жанра " + genre + " не найдены.");
+            System.out.println("Книги жанра \"" + genre + "\" не найдены.");
+        } else {
+            System.out.println("Найдено книг с подобным жанром: " + booksByGenre.size());
         }
         return booksByGenre;
     }
@@ -132,8 +189,12 @@ public class MainServiceImpl implements MainService {
             return;
         }
 
-        repositoryBook.deleteBook(existingBook);
-        System.out.println("Книга удалена: " + book.getId());
+        try {
+            repositoryBook.deleteBook(existingBook);
+            System.out.println("Книга удалена: " + existingBook.getTitle());
+        } catch (Exception e) {
+            System.out.println("Ошибка при удалении книги: " + e);
+        }
     }
 
     //-----------------------------------------Alla Nazarenko------------------------------

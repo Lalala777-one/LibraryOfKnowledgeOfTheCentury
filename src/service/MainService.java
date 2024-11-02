@@ -22,7 +22,7 @@ public interface MainService {
 
     Book getBookById(int id);
     MyList<Book> getBookByAuthor(String author);
-    Book getBookByTitle(String title);
+    MyList<Book> getBookByTitle(String title);
 
     MyList<Book> getBookByGenre(String genre);
 
