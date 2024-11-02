@@ -201,19 +201,17 @@ public class Menu {
     private void showFreeBookMenu(Book book) {
         System.out.println("Список свободных книг:");
         while (true) {
-            System.out.println("Книга: \"" + book.getTitle() + "\", " + book.getAuthor());
+            System.out.println(book.toString());
             System.out.println("1. Взять");
             System.out.println("0. Вернуться в предыдущее меню");
 
-            System.out.println("\n Сделайте выбор пункта меню");
+            System.out.println("\nСделайте выбор пункта меню");
             int input = scanner.nextInt();
             scanner.nextLine();
 
             if (input == 0) break;
 
             service.takeBook(book.getId());
-            System.out.println("Книга \"" + book.getTitle() + "\", " + book.getAuthor() + " успешно взята.");
-
         }
     }
 
@@ -407,7 +405,7 @@ public class Menu {
         System.out.println();
         System.out.println("Список свободных книг этого жанра:");
         for (Book book : books) {
-            if(book.isBusy()) {
+            if (book.isBusy()) {
                 System.out.println("Книга (занята): id: " + book.getId() + "; название: " + book.getTitle() + "; жанр: " + book.getGenre());
             } else {
                 System.out.println("Книга (свободна): id: " + book.getId() + "; название: " + book.getTitle() + "; жанр: " + book.getGenre());
@@ -488,7 +486,7 @@ public class Menu {
                 break;
             case 3:
                 service.logOutUser();
-                System.out.println("Вы вышли из системы");
+                System.out.println("Вы вышли из системы. До новых встреч в нашей библиотеке");
                 waitRead();
                 break;
             default:
@@ -506,7 +504,7 @@ public class Menu {
             System.out.println("3. Найти, у кого книга сейчас");
             System.out.println("0. Вернуться в предыдущее меню");
 
-            System.out.println("\n Сделайте выбор пункта меню");
+            System.out.println("\nСделайте выбор пункта меню");
             int input = scanCorrectIntFromUser(3);
 
             if (input == 0) break;
@@ -519,15 +517,12 @@ public class Menu {
         switch (input) {
             case 1:
                 addBook();
-
                 break;
             case 2:
                 deleteBook();
-
                 break;
             case 3:
                 whoHasBook();
-
                 break;
             default:
                 System.out.println("\nНеверный ввод");
