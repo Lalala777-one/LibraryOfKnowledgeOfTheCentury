@@ -100,15 +100,16 @@ return null;
         return result;
     }
 
-
     @Override
-    public Book getBookByTitle(String title) {
+    public MyList<Book> getBookByTitle(String title) {
+        MyList<Book> result = new MyArrayList<>();
         for (Book book : books){
             if(book.getTitle().equals(title)){
-                return book;
+                result.add(book);
             }
         }
-        return null;
+        return result;
+
     }
 
     @Override

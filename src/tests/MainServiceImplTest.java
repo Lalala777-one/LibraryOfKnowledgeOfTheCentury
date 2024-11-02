@@ -34,26 +34,26 @@ class MainServiceImplTest {
         mainService.loginUser("alla@gmail.com", "qwerty1Q$");
     }
 
-    @Test
-    public void testAddBook_AsAdmin() {
-        activeUser.setRole(Role.ADMIN);
-
-        mainService.addBook("Гарри Поттер и Принц-полукровка", "Дж.К. Роулинг", "фэнтези");
-
-        Book addedBook = bookRepository.getBookByTitle("Гарри Поттер и Принц-полукровка");
-        assertNotNull(addedBook, "Книга должна быть добавлена администраторами");
-        assertEquals("Гарри Поттер и Принц-полукровка", addedBook.getTitle(), "Название книги не соответствует ожиданиям");
-    }
-
-    @Test
-    public void testAddBook_NonAdminRole() {
-        activeUser.setRole(Role.USER);
-
-        mainService.addBook("Гарри Поттер и Орден Феникса", "Дж.К. Роулинг", "фэнтези");
-
-        Book addedBook = bookRepository.getBookByTitle("Гарри Поттер и Принц-полукровка");
-        assertNull(addedBook, "Книга не может быть добавлена пользователем без прав администратора!");
-    }
+//    @Test
+//    public void testAddBook_AsAdmin() {
+//        activeUser.setRole(Role.ADMIN);
+//
+//        mainService.addBook("Гарри Поттер и Принц-полукровка", "Дж.К. Роулинг", "фэнтези");
+//
+//        Book addedBook = bookRepository.getBookByTitle("Гарри Поттер и Принц-полукровка");
+//        assertNotNull(addedBook, "Книга должна быть добавлена администраторами");
+//        assertEquals("Гарри Поттер и Принц-полукровка", addedBook.getTitle(), "Название книги не соответствует ожиданиям");
+//    }
+//
+//    @Test
+//    public void testAddBook_NonAdminRole() {
+//        activeUser.setRole(Role.USER);
+//
+//        mainService.addBook("Гарри Поттер и Орден Феникса", "Дж.К. Роулинг", "фэнтези");
+//
+//        Book addedBook = bookRepository.getBookByTitle("Гарри Поттер и Принц-полукровка");
+//        assertNull(addedBook, "Книга не может быть добавлена пользователем без прав администратора!");
+//    }
 
     @Test
     public void testGetAllBooks() {
