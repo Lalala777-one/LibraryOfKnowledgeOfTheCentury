@@ -27,27 +27,30 @@ public class MainServiceImpl implements MainService {
     }
 
     @Override
-    public void addBook(String title, String author, String genre) {
+    public boolean addBook(String title, String author, String genre) {
         if (activeUser == null || activeUser.getRole() != Role.ADMIN) {
             System.out.println("Добавление новой книги доступно только Администраторам.");
-            return;
+            return false;
         }
         if (!title.matches("^[\\p{L}0-9\\s`\\-.,!?()&]+$")) {
             System.out.println("Название книги может содержать только буквы, цифры, пробелы и допустимые специальные символы: '-.,!?");
-            return;
+            return false;
         }
         if (!author.matches("^[\\p{L}\\s`\\-]+$")) {
             System.out.println("Имя автора может содержать только буквы, пробелы и допустимые специальные символы: '-");
-            return;
+            return false;
         }
-        if (!genre.matches("^[a-zA-Z\\s]+$")) {
+        if (!genre.matches("^[a-zA-Z\\s]+$")) {  // проверка на англ буквы, а у нас книги на русском
             System.out.println("Жанр может содержать только буквы и пробелы.");
-            return;
+            return false;
         }
+        /*
         if (repositoryBook.getBookByTitle(title) != null) {
             System.out.println("Книга з таким названием уже существует.");
-            return;
+            return false;
         }
+
+         */
 
         try {
             repositoryBook.addBook(title, author, genre);
@@ -55,6 +58,7 @@ public class MainServiceImpl implements MainService {
         } catch (Exception e) {
             System.out.println("Ошибка при добавлении книги: " + e);
         }
+        return true;
     }
 
     @Override
@@ -172,21 +176,20 @@ public class MainServiceImpl implements MainService {
     }
 
     @Override
-    public void deleteBook(Book book) {
+    public boolean deleteBook(Book book) {
         if (book == null) {
             System.out.println("Книга не может быть null");
-            return;
+            return false;
         }
-
         // Только админ. Значит должен быть пользователь с ролью ADMIN, а не какой-то другой
         if (activeUser == null || activeUser.getRole() != Role.ADMIN) {
             System.out.println("Доступно только Администраторам");
-            return;
+            return false;
         }
         Book existingBook = repositoryBook.getBookById(book.getId());
         if (existingBook == null) {
             System.out.println("Книга за таким Id не найдена");
-            return;
+            return false;
         }
 
         try {
@@ -195,6 +198,7 @@ public class MainServiceImpl implements MainService {
         } catch (Exception e) {
             System.out.println("Ошибка при удалении книги: " + e);
         }
+        return true;
     }
 
     //-----------------------------------------Alla Nazarenko------------------------------

@@ -11,7 +11,7 @@ public interface MainService {
     // Методы, такие как добавитьТовар, создатьЗаказ, зарегистрироватьПользователя и т.д
 
 
-    void addBook(String title, String author, String genre);
+    boolean addBook(String title, String author, String genre);
 
     MyList<Book> getAllBooks();
     MyList<Book> getAllFreeBooks();
@@ -26,7 +26,7 @@ public interface MainService {
 
     MyList<Book> getBookByGenre(String genre);
 
-    void deleteBook(Book book); // нельзя взять на прокат, больше не доступна // Доступно только АДМИНУ
+    boolean deleteBook(Book book); // нельзя взять на прокат, больше не доступна // Доступно только АДМИНУ
 
     boolean takeBook(int id);
 

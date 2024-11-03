@@ -527,9 +527,11 @@ public class Menu {
         System.out.println(Color.YELLOW + "Введите жанр:" + Color.RESET);
         String genre = scanner.nextLine();
 
-        service.addBook(title, author, genre);
-        System.out.println(Color.PURPLE + "Книга \"" + title + "\", " + author + "\", " + genre
-                + "\", " + " успешно добавлена!" + Color.RESET);
+        if(service.addBook(title, author, genre)){
+            System.out.println(Color.PURPLE + "Книга \"" + title + "\", " + author + "\", " + genre
+                    + "\", " + " успешно добавлена!" + Color.RESET);
+        }else System.out.println("Добавление книги невозможно");
+
     }
 
     private void deleteBook() {
@@ -550,9 +552,11 @@ public class Menu {
             System.out.println(Color.GREEN + "\n Сделайте выбор пункта меню" + Color.RESET);
             int input = scanCorrectIntFromUser(1);
             if (input == 0) break;
-            service.deleteBook(book);
-            System.out.println(Color.PURPLE + "Книга \"" + book.getTitle() + "\", " + book.getAuthor() + "\", " + book.getGenre()
-                    + "\", " + " успешно удалена!" + Color.RESET);
+            if (service.deleteBook(book)) {
+                System.out.println(Color.PURPLE + "Книга \"" + book.getTitle() + "\", " + book.getAuthor() + "\", " + book.getGenre()
+                        + "\", " + " успешно удалена!" + Color.RESET);
+                break;
+            }
         }
     }
 
