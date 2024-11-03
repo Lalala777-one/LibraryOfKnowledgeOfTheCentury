@@ -81,7 +81,7 @@ public class MainServiceImpl implements MainService {
     public MyList<Book> getAllBusyBooks() {
         MyList<Book> busyBooks = repositoryBook.getAllBusyBooks();
         if (busyBooks.isEmpty()) {
-            System.out.println("В данный момент нет занятых книг.");
+            System.out.println();
         }
         return busyBooks;
     }
