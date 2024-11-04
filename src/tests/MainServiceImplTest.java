@@ -7,6 +7,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import repository.BookRepository;
 import repository.BookRepositoryImpl;
 import repository.UserRepository;
@@ -15,7 +18,9 @@ import service.MainService;
 import service.MainServiceImpl;
 import utils.MyList;
 
+import java.awt.*;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,16 +39,49 @@ class MainServiceImplTest {
         mainService.loginUser("alla@gmail.com", "qwerty1Q$");
     }
 
+    // Test addBook
+// використати "РЕСУРСИ" з тестів Сергія раніше...
 //    @Test
-//    public void testAddBook_AsAdmin() {
-//        activeUser.setRole(Role.ADMIN);
+//    void testAddBookAsAdmin() {
+//        String title = "Новая книга";
+//        String author = "Автор Книги";
+//        String genre = "Фантастика";
 //
-//        mainService.addBook("Гарри Поттер и Принц-полукровка", "Дж.К. Роулинг", "фэнтези");
+//        mainService.addBook(title, author, genre);
 //
-//        Book addedBook = bookRepository.getBookByTitle("Гарри Поттер и Принц-полукровка");
-//        assertNotNull(addedBook, "Книга должна быть добавлена администраторами");
-//        assertEquals("Гарри Поттер и Принц-полукровка", addedBook.getTitle(), "Название книги не соответствует ожиданиям");
+//        MyList<Book> addedBook = bookRepository.getBookByTitle(title); // Отримайте додану книгу
+//        assertNotNull(addedBook);
+//        assertEquals(title, addedBook.getTitle());
+//        assertEquals(author, addedBook.getAuthor());
+//        assertEquals(genre, addedBook.getGenre());
 //    }
+
+    @ParameterizedTest
+    @MethodSource("provideBooksForTestAddBookAsAdmin")
+    void testAddBookAsAdmin(String title, String author, String genre){
+        mainService.addBook(title, author, genre);
+
+        if (title.isEmpty() || author.isEmpty() || genre.isEmpty() ||
+        !title.matches("^[\\p{L}0-9\\s`\\-,.!?()&]+$") ||
+        !author.matches("^[\\p{L}0-9\\s`\\-]+$") ||
+        !genre.matches("^\\p{L}\\s}+$") ||
+        bookRepository.getBookByTitle(title) != null) {
+            assertNull(bookRepository.getBookByTitle(title), "The book should not be added with incorrect data.");
+        } else {
+            assertNotNull(bookRepository.getBookByTitle(title), "The book must be added successfully.");
+        }
+    }
+
+    static Stream<Arguments> provideBooksForTestAddBookAsAdmin() {
+        return Stream.of(
+                Arguments.of("Harry Potter", "J.K. Rowling", "fantasy"),
+                Arguments.of("Harry Potter 2", "J.K. Rowling", "fantasy"),
+                Arguments.of("", "", "комедія"),  // Неправильні дані
+                Arguments.of("Нова Книга", "Автор 123", "наука"),  // Неправильний автор
+                Arguments.of("Correct Title", "Author Name", "роман")
+        );
+    }
+
 //
 //    @Test
 //    public void testAddBook_NonAdminRole() {
