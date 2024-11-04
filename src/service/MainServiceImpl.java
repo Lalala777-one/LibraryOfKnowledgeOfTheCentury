@@ -18,7 +18,7 @@ public class MainServiceImpl implements MainService {
 
     private final Set<String> adminEmails = Set.of("admin1@example.com");
     //private final Set<String> adminPasswords = Set.of("adminPass1", "adminPass2", "devPass1", "devPass2");
-    private final Set<String> adminPasswords = Set.of("devPass1");
+    private final Set<String> adminPasswords = Set.of("В4!bL6rs");
 
     private User activeUser;
 
@@ -52,7 +52,7 @@ public class MainServiceImpl implements MainService {
 
         try {
             repositoryBook.addBook(title, author, genre);
-            System.out.println("Книга успешно добавлена: " + title);
+            //System.out.println("Книга успешно добавлена: " + title);
         } catch (Exception e) {
             System.out.println("Ошибка при добавлении книги: " + e);
         }
@@ -186,7 +186,7 @@ public class MainServiceImpl implements MainService {
 
         try {
             repositoryBook.deleteBook(existingBook);
-            System.out.println("Книга удалена: " + existingBook.getTitle());
+            //System.out.println("Книга удалена: " + existingBook.getTitle());
         } catch (Exception e) {
             System.out.println("Ошибка при удалении книги: " + e);
         }
@@ -418,7 +418,7 @@ public class MainServiceImpl implements MainService {
     public boolean loginAdmin(String email, String password) {
         // Перевірка наявності email
         if (!isAdmin(email)) {
-            System.out.println("Доступ запрещен. Вы не являетесь администратором.");
+            //System.out.println("Доступ запрещен. Вы не являетесь администратором.");
             return false;
         }
 
@@ -431,8 +431,7 @@ public class MainServiceImpl implements MainService {
 
         this.activeUser = new User(email, password);
         this.activeUser.setRole(Role.ADMIN);
-        System.out.println("Добро пожаловать, администратор!");
-
+        //System.out.println("Добро пожаловать, администратор!");
         return true;
     }
 
@@ -504,7 +503,7 @@ public class MainServiceImpl implements MainService {
                 return user;
             }
         }
-        System.out.println("Книга с ID " + id + " не найдена в списке взятых читателями");
+        //System.out.println("Книга с ID " + id + " не найдена в списке взятых читателями");
         return null;
     }
 }
