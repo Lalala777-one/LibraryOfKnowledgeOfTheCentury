@@ -1,10 +1,12 @@
 package view;
 
 import model.Book;
+import model.Role;
 import model.User;
 import service.MainService;
 import utils.MyList;
 
+import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -12,12 +14,15 @@ public class Menu {
     private final MainService service;
     private final Scanner scanner = new Scanner(System.in);
 
+    // new
+    private User activeUser = null;
+
     public Menu(MainService service) {
         this.service = service;
     }
 
     private void waitRead() {
-        System.out.println("\nДля продожения нажмите enter");
+        System.out.println("\nДля продолжения нажмите enter");
         scanner.nextLine();
     }
 
@@ -219,14 +224,14 @@ public class Menu {
     }
 
     private void showBusyBooksListMenu() {
-        System.out.println(Color.BLUE + "Вот список книг, находящихся у насших читателей" + Color.RESET);
+        System.out.println(Color.BLUE + "Вот список книг, находящихся у наших читателей" + Color.RESET);
         MyList<Book> busyBooks = service.getAllBusyBooks();
 
         if (busyBooks == null || busyBooks.isEmpty()) {
             System.out.println(Color.BLUE + "Не найдено занятых книг" + Color.RESET);
             return;
         } else {
-            System.out.println(Color.BLUE + "Найдено " + busyBooks.size() + "занятых книг:" + Color.RESET);
+            System.out.println(Color.BLUE + "Найдено " + busyBooks.size() + " занятых книг:" + Color.RESET);
             for (Book book : busyBooks) {
                 System.out.println(book.toString());
             }
@@ -269,6 +274,10 @@ public class Menu {
             System.out.println("1. Взять книгу");
         }
         int choice = scanCorrectIntFromUser(1);
+        if (choice == 0) {
+            System.out.println("Возвращаемся в предыдущее меню...");
+            return;
+        }
         if (choice == 1) {
             boolean successTakeBook = service.takeBook(inputedId);
         } else {
@@ -313,6 +322,10 @@ public class Menu {
         System.out.println(Color.BLUE + "0. Вернуться в предыдущее меню" + Color.RESET);
         System.out.println(Color.BLUE + "1. Взять книгу" + Color.RESET);
         int choice = scanCorrectIntFromUser(1);
+        if (choice == 0) {
+            System.out.println("Возвращаемся в предыдущее меню...");
+            return;
+        }
         if (choice == 1) {
             System.out.println(Color.YELLOW + "Введите id книги: " + Color.RESET);
             int bookId = scanner.nextInt();
@@ -360,6 +373,10 @@ public class Menu {
         System.out.println(Color.BLUE + "0. Вернуться в предыдущее меню" + Color.RESET);
         System.out.println(Color.BLUE + "1. Взять книгу" + Color.RESET);
         int choice = scanCorrectIntFromUser(1);
+        if (choice == 0) {
+            System.out.println("Возвращаемся в предыдущее меню...");
+            return;
+        }
         if (choice == 1) {
             System.out.println(Color.YELLOW + "Введите id книги:" + Color.RESET);
             int bookId = scanner.nextInt();
@@ -408,6 +425,10 @@ public class Menu {
         System.out.println(Color.BLUE + "0. Вернуться в предыдущее меню" + Color.RESET);
         System.out.println(Color.BLUE + "1. Взять книгу" + Color.RESET);
         int choice = scanCorrectIntFromUser(1);
+        if (choice == 0) {
+            System.out.println("Возвращаемся в предыдущее меню...");
+            return;
+        }
         if (choice == 1) {
             System.out.println("Введите id книги: ");
             int bookId = scanner.nextInt();
@@ -436,23 +457,38 @@ public class Menu {
     private void handleUserMenuChoice(int input) {
         switch (input) {
             case 1:
-                // Подтягиваем авторизацию
+//                // Подтягиваем авторизацию
+//                System.out.println(Color.YELLOW + "Введите ваш email:" + Color.RESET);
+//                String email = scanner.nextLine();
+//
+//                System.out.println(Color.YELLOW + "Введите ваш пароль:" + Color.RESET);
+//                String password = scanner.nextLine();
+//
+//                boolean isLoggedIn = service.loginUser(email, password);
+//
+//                if (isLoggedIn) {
+//                    System.out.println(Color.PURPLE + "Добро пожаловать в ЗНАНИЯ ВЕКА!" + Color.RESET);
+//                    //TODO добавить выход в меню книг
+//                    showBookMenu();
+//                } else {
+//                    System.out.println(Color.RED + "Неверный email или пароль. Попробуйте снова" + Color.RESET);
+//                }
+//                waitRead();
+//                break;
                 System.out.println(Color.YELLOW + "Введите ваш email:" + Color.RESET);
                 String email = scanner.nextLine();
 
                 System.out.println(Color.YELLOW + "Введите ваш пароль:" + Color.RESET);
                 String password = scanner.nextLine();
 
-                boolean isLoggedIn = service.loginUser(email, password);
-
-                if (isLoggedIn) {
-                    System.out.println(Color.PURPLE + "Добро пожаловать в ЗНАНИЯ ВЕКА!" + Color.RESET);
-                    //TODO добавить выход в меню книг
-                    showBookMenu();
-                } else {
+                if (!service.loginUser(email, password)) {
                     System.out.println(Color.RED + "Неверный email или пароль. Попробуйте снова" + Color.RESET);
+                    return; // Вихід з методу, якщо вхід не вдався
                 }
-                waitRead();
+
+                // Вітаємо користувача
+                System.out.println(Color.PURPLE + "Добро пожаловать, " + email + "!" + Color.RESET);
+                showBookMenu();
                 break;
             case 2:
                 System.out.println(Color.GREEN + "Давайте зарегистрируемся!" + Color.RESET);
@@ -462,9 +498,9 @@ public class Menu {
                 System.out.println(Color.YELLOW + "Введите пароль" + Color.RESET);
                 String password1 = scanner.nextLine();
 
-                User user = service.registerUser(email1, password1);
+                User registeredUser = service.registerUser(email1, password1);
 
-                if (user != null) {
+                if (registeredUser != null) {
                     System.out.println(Color.PURPLE + "Вы успешно зарегистрировались в системе" + Color.RESET);
                     System.out.println(Color.YELLOW + "Предлагаем перейти к выбору книги)" + Color.RESET);
                     showBookMenu();
@@ -474,8 +510,13 @@ public class Menu {
                 waitRead();
                 break;
             case 3:
-                service.logOutUser();
-                System.out.println(Color.PURPLE + "Вы вышли из системы. До новых встреч в нашей библиотеке" + Color.RESET);
+                if (activeUser != null) {
+                    service.logOutUser();
+                    activeUser = null; // Очищаємо активного користувача
+                    System.out.println(Color.PURPLE + "Вы вышли из системы. До новых встреч в нашей библиотеке" + Color.RESET);
+                } else {
+                    System.out.println(Color.RED + "Вы не вошли в систему." + Color.RESET);
+                }
                 waitRead();
                 break;
             default:
@@ -484,16 +525,52 @@ public class Menu {
     }
 
     private void showAdminMenu() {
+//        while (true) {
+//            if (activeUser == null || activeUser.getRole() != Role.ADMIN) {
+//                System.out.println(Color.RED + "Доступ в меню администратора доступен только для администраторов. Пожалуйста, войдите в систему как администратор." + Color.RESET);
+//                return;
+//            }
+//            System.out.println(Color.GREEN + "Добро пожаловать в меню администратора" + Color.RESET);
+//            System.out.println("1. Добавить книгу");
+//            System.out.println("2. Удалить книгу");
+//            System.out.println("3. Найти, у кого книга сейчас");
+//            System.out.println("0. Вернуться в предыдущее меню");
+//
+//            System.out.println(Color.GREEN + "\nСделайте выбор пункта меню" + Color.RESET);
+//            int input = scanCorrectIntFromUser(3);
+//            if (input == 0) break;
+//            handleAdminMenuChoice(input);
+//        }
+        // Запит на вхід в систему
+        System.out.println(Color.YELLOW + "Введите ваш email для входа в меню администратора:" + Color.RESET);
+        String email = scanner.nextLine();
+
+        System.out.println(Color.YELLOW + "Введите ваш пароль:" + Color.RESET);
+        String password = scanner.nextLine();
+
+        // Логін адміністратора
+        if (!service.loginAdmin(email, password)) {
+            System.out.println(Color.RED + "Ошибка входа. Проверьте ваш email и пароль." + Color.RESET);
+            return; // Вихід з методу, якщо вхід не вдався
+        }
+
+        System.out.println(Color.GREEN + "Добро пожаловать в меню администратора" + Color.RESET);
+
+        // Відображення пунктів меню
         while (true) {
-            System.out.println(Color.GREEN + "Добро аожаловать в меню администратора" + Color.RESET);
             System.out.println("1. Добавить книгу");
             System.out.println("2. Удалить книгу");
             System.out.println("3. Найти, у кого книга сейчас");
+            System.out.println("4. Список книг");
             System.out.println("0. Вернуться в предыдущее меню");
 
             System.out.println(Color.GREEN + "\nСделайте выбор пункта меню" + Color.RESET);
-            int input = scanCorrectIntFromUser(3);
-            if (input == 0) break;
+            int input = scanCorrectIntFromUser(4);
+            if (input == 0) {
+                service.logOutUser(); // Логаут користувача
+                System.out.println(Color.PURPLE + "Вы вышли из меню администратора." + Color.RESET);
+                break; // Вихід з циклу
+            }
             handleAdminMenuChoice(input);
         }
     }
@@ -508,6 +585,9 @@ public class Menu {
                 break;
             case 3:
                 whoHasBook();
+                break;
+            case 4:
+                showBooks(); // Додано виклик методу для відображення списку книг
                 break;
             default:
                 System.out.println(Color.RED + "\nНеверный ввод" + Color.RESET);
@@ -543,18 +623,46 @@ public class Menu {
 
             Book book = service.getBookById(bookID);
 
-            System.out.println(book.toString());
-            System.out.println(Color.BLUE + "1. Удалить" + Color.RESET);
-            System.out.println(Color.BLUE + "0. Вернуться в предыдущее меню" + Color.RESET);
+            if (book == null) {
+                System.out.println(Color.RED + "Книга с таким ID не найдена. Пожалуйста, попробуйте еще раз." + Color.RESET);
+                continue; // Продовжити цикл для повторного введення ID
+            }
 
-            System.out.println(Color.GREEN + "\n Сделайте выбор пункта меню" + Color.RESET);
-            int input = scanCorrectIntFromUser(1);
-            if (input == 0) break;
-            service.deleteBook(book);
-            System.out.println(Color.PURPLE + "Книга \"" + book.getTitle() + "\", " + book.getAuthor() + "\", " + book.getGenre()
-                    + "\", " + " успешно удалена!" + Color.RESET);
+            // Виводимо інформацію про книгу
+            System.out.println(book.toString());
+
+            // Меню для дій
+            while (true) {
+                System.out.println(Color.BLUE + "1. Удалить" + Color.RESET);
+                System.out.println(Color.BLUE + "0. Вернуться в предыдущее меню" + Color.RESET);
+
+                System.out.println(Color.GREEN + "\n Сделайте выбор пункта меню" + Color.RESET);
+                int input = scanCorrectIntFromUser(1); // Дозволяємо вводити 0 або 1
+
+                if (input == 0) {
+                    System.out.println("Возвращаемся в предыдущее меню...");
+                    return;
+                } else if (input == 1) {
+                    // Якщо вибрано 1, видаляємо книгу
+                    service.deleteBook(book);
+                    System.out.println(Color.PURPLE + "Книга \"" + book.getTitle() + "\", " + book.getAuthor() + "\", " + book.getGenre()
+                            + "\", " + " успешно удалена!" + Color.RESET);
+
+                    // Запитати, чи хоче користувач видалити ще одну книгу
+                    System.out.println(Color.GREEN + "Хотите удалить еще одну книгу? (да/нет)" + Color.RESET);
+                    String response = scanner.nextLine();
+                    if (!response.equalsIgnoreCase("да")) {
+                        return; // Виходимо з методу deleteBook, якщо користувач не хоче видаляти більше книг
+                    }
+
+                    // Повертаємося до початку циклу для запиту нового ID
+                    break;
+                }
+            }
         }
     }
+
+
 
     private void whoHasBook() {
 
@@ -570,5 +678,19 @@ public class Menu {
         System.out.println(Color.PURPLE + "Книга \"" + book.getTitle() + "\", " + book.getAuthor() + ", " + book.getGenre()
                 + " находится у читателя c email " + user.getEmail() + Color.RESET);
     }
+
+    private void showBooks() {
+        System.out.println(Color.BLUE + "Список книг:" + Color.RESET);
+        MyList<Book> books = service.getAllBooks(); // Метод для отримання всіх книг
+
+        if (books.isEmpty()) {
+            System.out.println(Color.RED + "Список книг пуст." + Color.RESET);
+        } else {
+            for (Book book : books) {
+                System.out.println(book.toString());
+            }
+        }
+    }
+
 
 }

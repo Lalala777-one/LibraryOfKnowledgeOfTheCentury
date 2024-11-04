@@ -20,6 +20,7 @@ public interface MainService {
 
 
 
+
     Book getBookById(int id);
     MyList<Book> getBookByAuthor(String author);
     MyList<Book> getBookByTitle(String title);
@@ -52,4 +53,7 @@ public interface MainService {
     User whoHasBook(int id); // возвращает user у кого сейчас книга
 
 
+    User getActiveUser();
+
+    boolean loginAdmin(String email, String password);
 }

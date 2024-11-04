@@ -9,11 +9,16 @@ import utils.MyArrayList;
 import utils.MyList;
 
 import java.util.Scanner;
+import java.util.Set;
 
 public class MainServiceImpl implements MainService {
 
     private final BookRepository repositoryBook;
     private final UserRepository repositoryUser;
+
+    private final Set<String> adminEmails = Set.of("admin1@example.com");
+    //private final Set<String> adminPasswords = Set.of("adminPass1", "adminPass2", "devPass1", "devPass2");
+    private final Set<String> adminPasswords = Set.of("devPass1");
 
     private User activeUser;
 
@@ -40,12 +45,8 @@ public class MainServiceImpl implements MainService {
             System.out.println("Имя автора может содержать только буквы, пробелы и допустимые специальные символы: '-");
             return;
         }
-        if (!genre.matches("^[a-zA-Z\\s]+$")) {
+        if (!genre.matches("^[\\p{L}\\s]+$")) {
             System.out.println("Жанр может содержать только буквы и пробелы.");
-            return;
-        }
-        if (repositoryBook.getBookByTitle(title) != null) {
-            System.out.println("Книга з таким названием уже существует.");
             return;
         }
 
@@ -114,9 +115,7 @@ public class MainServiceImpl implements MainService {
                 booksByAuthor.add(book);
             }
         }
-        if (booksByAuthor.isEmpty()) {
-            System.out.println("Книги автора " + author + " не найдены.");
-        } else {
+        if (!booksByAuthor.isEmpty()) {
             System.out.println("Найдено книг автора: " + booksByAuthor.size());
         }
         return booksByAuthor;
@@ -138,9 +137,7 @@ public class MainServiceImpl implements MainService {
             }
         }
 
-        if (booksByTitle.isEmpty()) {
-            System.out.println("Книги с названием \\\"\" + title + \"\\\" не найдены.");
-        } else {
+        if (!booksByTitle.isEmpty()) {
             System.out.println("Найдено книг с подобным названием: " + booksByTitle.size());
         }
         return booksByTitle;
@@ -164,8 +161,6 @@ public class MainServiceImpl implements MainService {
         }
 
         if (booksByGenre.isEmpty()) {
-            System.out.println("Книги жанра \"" + genre + "\" не найдены.");
-        } else {
             System.out.println("Найдено книг с подобным жанром: " + booksByGenre.size());
         }
         return booksByGenre;
@@ -391,6 +386,9 @@ public class MainServiceImpl implements MainService {
         return isDigit && isUpperCase && isLowerCase && isSpecialSymbol;
     }
 
+    public boolean isAdmin(String email) {
+        return adminEmails.contains(email);
+    }
 
     @Override
     public boolean loginUser(String email, String password) {
@@ -412,7 +410,28 @@ public class MainServiceImpl implements MainService {
 
         // Установить пользователя как активного
         this.activeUser = user;
-        //System.out.println("Добро пожаловать в ЗНАНИЯ ВЕКА!"); // теперь в сервисе
+        System.out.println("Добро пожаловать, пользователь!");
+
+        return true;
+    }
+
+    public boolean loginAdmin(String email, String password) {
+        // Перевірка наявності email
+        if (!isAdmin(email)) {
+            System.out.println("Доступ запрещен. Вы не являетесь администратором.");
+            return false;
+        }
+
+        // Перевірка пароля
+        int adminIndex = adminEmails.stream().toList().indexOf(email);
+        if (adminIndex == -1 || !adminPasswords.contains(password) || !adminPasswords.toArray()[adminIndex].equals(password)) {
+            System.out.println("Неверный пароль для администратора.");
+            return false;
+        }
+
+        this.activeUser = new User(email, password);
+        this.activeUser.setRole(Role.ADMIN);
+        System.out.println("Добро пожаловать, администратор!");
 
         return true;
     }
@@ -420,7 +439,7 @@ public class MainServiceImpl implements MainService {
     @Override
     public boolean logOutUser() {
         if (activeUser == null) {
-            System.out.println("Вы не авторизирированы");
+            System.out.println("Вы не авторизированны");
             return false;
         } else {
             activeUser = null;
