@@ -19,19 +19,8 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     private void addUsers() {
-        User admin = new User("sunnyday01@gmail.com", "G7$eXq*1");
-        admin.setRole(Role.ADMIN);
-
-        User blocked = new User("midnightstar02@gmail.com", "a9%Jk[3v]s");
-        blocked.setRole(Role.BLOCKED);
-
-
-        User blocked2 = new User("arigato02@gmail.com", "Z@1mLp?4s");
-        blocked.setRole(Role.BLOCKED);
 
         users.addAll(
-                admin,
-                blocked,
                 new User("blueocean03@gmail.com", "b_5R$hN8s"),
                 new User("greenleaf04@gmail.com", "S*2jC?x7s"),
                 new User("redrose05@gmail.com", "H1$sKv(3s)"),

@@ -18,7 +18,7 @@ public class MainServiceImpl implements MainService {
 
     private final Set<String> adminEmails = Set.of("admin1@example.com");
     //private final Set<String> adminPasswords = Set.of("adminPass1", "adminPass2", "devPass1", "devPass2");
-    private final Set<String> adminPasswords = Set.of("devPass1");
+    private final Set<String> adminPasswords = Set.of("e5&Jm0Hs4");
 
     private User activeUser;
 
@@ -410,7 +410,7 @@ public class MainServiceImpl implements MainService {
 
         // Установить пользователя как активного
         this.activeUser = user;
-        System.out.println("Добро пожаловать, пользователь!");
+        //System.out.println("Добро пожаловать, пользователь!");
 
         return true;
     }
