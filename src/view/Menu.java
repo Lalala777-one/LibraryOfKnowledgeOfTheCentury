@@ -39,10 +39,10 @@ public class Menu {
                 if (number >= 0 && number <= maxInputInt) {
                     return number;
                 } else {
-                    System.out.println("Ошибка: число должно быть от 0 до " + maxInputInt + ".");
+                    System.out.println(Color.RED + "Ошибка: число должно быть от 0 до " + maxInputInt + "." + Color.RESET);
                 }
             } catch (Exception e) {
-                System.out.println("Ошибка: введите целое число.");
+                System.out.println(Color.RED + "Ошибка: введите число!" + Color.RESET);
                 scanner.next();
                 scanner.nextLine();
             }
@@ -62,33 +62,54 @@ public class Menu {
             System.out.println("0. Выход из системы");
             System.out.println(Color.YELLOW + "\nВведите пункт меню:" + Color.RESET);
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            if (!scanner.hasNextInt()) {
+                System.out.println(Color.RED + "Введите число!" + Color.RESET);
+                scanner.nextLine();
+                continue; // Повторяет запрос, не выходит из цикла
+            } else {
+                int choice = scanner.nextInt();
+                scanner.nextLine();
 
-            if (choice == 0) {
-                System.out.println(Color.CYAN + "До свидания!" + Color.RESET);
-                System.exit(0);
+                if (choice == 0) {
+                    System.out.println(Color.CYAN + "До свидания!" + Color.RESET);
+                    System.exit(0);
+                }
+                showSubMenu(choice);
+                break; // Выход из внутреннего цикла после корректного выбора
             }
-            showSubMenu(choice);
+
         }
     }
 
     private void showSubMenu(int choice) {
-        switch (choice) {
-            case 1:
-                showBookMenu();
-                waitRead();
-                break;
-            case 2:
-                showUserMenu();
-                waitRead();
-                break;
-            case 3:
-                showAdminMenu();
-                waitRead();
-                break;
-            default:
-                System.out.println(Color.YELLOW + "Сделайте корректный выбор\n" + Color.RESET);
+        while (true) {
+            switch (choice) {
+                case 1:
+                    showBookMenu();
+                    waitRead();
+                    break;
+                case 2:
+                    showUserMenu();
+                    waitRead();
+                    break;
+                case 3:
+                    showAdminMenu();
+                    waitRead();
+                    break;
+                default:
+                    System.out.println(Color.RED + "Сделайте корректный выбор\n" + Color.RESET);
+                    System.out.print("Введите повторно: ");
+
+                    // Запрашиваем новый ввод, если предыдущий выбор некорректен
+                    if (scanner.hasNextInt()) {
+                        choice = scanner.nextInt();
+                        scanner.nextLine(); // Очистка оставшегося символа новой строки
+                    } else {
+                        System.out.println(Color.RED + "Введите число!" + Color.RESET);
+                        scanner.nextLine(); // Очистка некорректного ввода
+                    }
+                    break;
+            }
         }
     }
 
@@ -103,12 +124,24 @@ public class Menu {
             System.out.println("6. Найти книгу по названию");
             System.out.println("7. Найти книгу по жанру");
             System.out.println("0. Вернуться в предыдущее меню");
-
             System.out.println(Color.GREEN + "\nСделайте выбор пункта меню" + Color.RESET);
-            int input = scanCorrectIntFromUser(7);
-            scanner.nextLine();
-            if (input == 0) break;
-            handleBookMenuChoice(input);
+
+            if (!scanner.hasNextInt()) {
+                System.out.println(Color.RED + "Введите число!" + Color.RESET);
+                scanner.nextLine();
+                continue; // Повторяет запрос, не выходит из цикла
+            } else {
+                int input = scanCorrectIntFromUser(7);
+                //int input = scanner.nextInt();
+                scanner.nextLine();
+                if (input == 0) {
+                    showMenu(); // Переход в предыдущее меню
+                    break; // Завершаем цикл, если выбрано "0"
+                } else {
+                    handleBookMenuChoice(input);
+                    break; // Выход из внутреннего цикла после корректного выбора
+                }
+            }
         }
     }
 
@@ -248,41 +281,52 @@ public class Menu {
     }
 
     private void findBookById() {
-        System.out.println("Введите ID книги:");
-        int inputedId = scanner.nextInt();
-        scanner.nextLine();
+        while (true) {
+            System.out.println("Введите ID книги:");
+            if (!scanner.hasNextInt()) {
+                System.out.println(Color.RED + "Введите число" + Color.RESET);
+                scanner.nextLine(); // Очищаем некорректный ввод
+                continue; // Повторяем внешний цикл, чтобы вывести меню снова
+            }
+            int inputedId = scanner.nextInt();
+            scanner.nextLine();
 
-        if (inputedId < 0) {
-            System.out.println("ID книги должен быть больше 0");
-            return;
+            if (inputedId < 0) {
+                System.out.println(Color.RED + "ID книги должен быть больше 0" + Color.RESET);
+                return;
+            }
+
+
+            Book book = service.getBookById(inputedId);
+
+            if (book == null) {
+                System.out.println(Color.RED + "Книга с таким ID не найдена" + Color.RESET);
+                continue; // Повторяем цикл, если книга не найдена
+            } else {
+                System.out.println("Книга с ID " + inputedId + ":");
+                System.out.println(book.toString());
+            }
+
+            //проверяем, не занята ли книга
+            if (book.isBusy()) {
+                System.out.println(Color.PURPLE + "Эта книга находится у другого читателя" + Color.RESET);
+            } else {
+                System.out.println(Color.BLUE + "0. Вернуться в предыдущее меню" + Color.RESET);
+                System.out.println(Color.BLUE + "1. Взять книгу" + Color.RESET);
+            }
+            int choice = scanCorrectIntFromUser(1);
+            if (choice == 0) {
+                System.out.println("Возвращаемся в предыдущее меню");
+                break;
+            }
+            if (choice == 1) {
+                boolean successTakeBook = service.takeBook(inputedId);
+            } else {
+                System.out.println(Color.RED + "Не удалось взять книгу" + Color.RESET);
+            }
+            break;
         }
 
-        Book book = service.getBookById(inputedId);
-
-        if (book == null) {
-            System.out.println("Книга с таким ID не найдена");
-        } else {
-            System.out.println("Книга с ID " + inputedId + ":");
-            System.out.println(book.toString());
-        }
-
-        //проверяем, не занята ли книга
-        if (book.isBusy()) {
-            System.out.println("Эта книга находится у другого читателя");
-        } else {
-            System.out.println("0. Вернуться в предыдущее меню");
-            System.out.println("1. Взять книгу");
-        }
-        int choice = scanCorrectIntFromUser(1);
-        if (choice == 0) {
-            System.out.println("Возвращаемся в предыдущее меню...");
-            return;
-        }
-        if (choice == 1) {
-            boolean successTakeBook = service.takeBook(inputedId);
-        } else {
-            System.out.println("Не удалось взять книгу");
-        }
     }
 
     private void findBookByAuthor() {
@@ -475,37 +519,51 @@ public class Menu {
 //                }
 //                waitRead();
 //                break;
-                System.out.println(Color.YELLOW + "Введите ваш email:" + Color.RESET);
-                String email = scanner.nextLine();
+                while (true) {
+                    System.out.println(Color.YELLOW + "Введите ваш email:" + Color.RESET);
+                    String email = scanner.nextLine();
 
-                System.out.println(Color.YELLOW + "Введите ваш пароль:" + Color.RESET);
-                String password = scanner.nextLine();
+                    System.out.println(Color.YELLOW + "Введите ваш пароль:" + Color.RESET);
+                    String password = scanner.nextLine();
 
-                if (!service.loginUser(email, password)) {
-                    System.out.println(Color.RED + "Неверный email или пароль. Попробуйте снова" + Color.RESET);
-                    return; // Вихід з методу, якщо вхід не вдався
+                    if (service.loginUser(email, password)) {
+                        // Вітаємо користувача
+                        System.out.println(Color.PURPLE + "Добро пожаловать, пользователь: " + email + "!" + Color.RESET);
+                        showBookMenu();
+                    } else {
+                        System.out.println(Color.RED + "Неверный email или пароль. Попробуйте снова" + Color.RESET);
+                        System.out.println(Color.YELLOW + "Повторить попытку (да/нет)?" + Color.RESET);
+                        String choice = scanner.nextLine();
+                        if (!choice.equalsIgnoreCase("да")) {
+                            break; // Выход из цикла, если пользователь не хочет повторять попытку
+                        }
+                    }
                 }
-
-                // Вітаємо користувача
-                System.out.println(Color.PURPLE + "Добро пожаловать, " + email + "!" + Color.RESET);
-                showBookMenu();
+                waitRead();
                 break;
             case 2:
-                System.out.println(Color.GREEN + "Давайте зарегистрируемся!" + Color.RESET);
-                System.out.println(Color.YELLOW + "Введите email:" + Color.RESET);
-                String email1 = scanner.nextLine();
+                while (true) {
+                    System.out.println(Color.GREEN + "Давайте зарегистрируемся!" + Color.RESET);
+                    System.out.println(Color.YELLOW + "Введите email:" + Color.RESET);
+                    String email1 = scanner.nextLine();
 
-                System.out.println(Color.YELLOW + "Введите пароль" + Color.RESET);
-                String password1 = scanner.nextLine();
+                    System.out.println(Color.YELLOW + "Введите пароль" + Color.RESET);
+                    String password1 = scanner.nextLine();
 
-                User registeredUser = service.registerUser(email1, password1);
+                    User registeredUser = service.registerUser(email1, password1);
 
-                if (registeredUser != null) {
-                    System.out.println(Color.PURPLE + "Вы успешно зарегистрировались в системе" + Color.RESET);
-                    System.out.println(Color.YELLOW + "Предлагаем перейти к выбору книги)" + Color.RESET);
-                    showBookMenu();
-                } else {
-                    System.out.println(Color.RED + "Регистрация провалена!" + Color.RESET);
+                    if (registeredUser != null) {
+                        System.out.println(Color.PURPLE + "Вы успешно зарегистрировались в системе" + Color.RESET);
+                        System.out.println(Color.YELLOW + "Предлагаем перейти к выбору книги)" + Color.RESET);
+                        showBookMenu();
+                    } else {
+                        System.out.println(Color.RED + "Регистрация провалена!" + Color.RESET);
+                        System.out.println(Color.YELLOW + "Повторить попытку (да/нет)?" + Color.RESET);
+                        String choice = scanner.nextLine();
+                        if (!choice.equalsIgnoreCase("да")) {
+                            break; // Выход из цикла, если пользователь не хочет повторять попытку
+                        }
+                    }
                 }
                 waitRead();
                 break;
