@@ -55,7 +55,7 @@ public class Menu {
 
     private void showMenu() {
         while (true) {
-            System.out.println(Color.GREEN + "Добро пожаловать в меню библиотеки" + Color.RESET);
+            System.out.println(Color.GREEN + "Добро пожаловать в меню библиотеку" + Color.RESET);
             System.out.println("1. Меню книг");
             System.out.println("2. Меню пользователя");
             System.out.println("3. Меню администратора");
@@ -704,7 +704,7 @@ public class Menu {
                     // Якщо вибрано 1, видаляємо книгу
                     service.deleteBook(book);
                     System.out.println(Color.PURPLE + "Книга \"" + book.getTitle() + "\", " + book.getAuthor() + "\", " + book.getGenre()
-                            + "\", " + " успешно удалена!" + Color.RESET);
+                            + "\", " + "успешно удалена!" + Color.RESET);
 
                     // Запитати, чи хоче користувач видалити ще одну книгу
                     System.out.println(Color.GREEN + "Хотите удалить еще одну книгу? (да/нет)" + Color.RESET);
@@ -732,8 +732,14 @@ public class Menu {
         Book book = service.getBookById(bookID);
         User user = service.whoHasBook(bookID);
 
-        System.out.println(Color.PURPLE + "Книга \"" + book.getTitle() + "\", " + book.getAuthor() + ", " + book.getGenre()
-                + " находится у читателя c email " + user.getEmail() + Color.RESET);
+        //проверяем - найден ли юзер, у кого такая книга
+        if (user == null) {
+            System.out.println(Color.RED + "Никто из читателей не брал книгу с id:" + bookID + Color.RESET);
+            return;
+        } else {
+            System.out.println(Color.PURPLE + "Книга \"" + book.getTitle() + "\", " + book.getAuthor() + ", " + book.getGenre()
+                    + " находится у читателя c email " + user.getEmail() + Color.RESET);
+        }
     }
 
     private void showBooks() {
