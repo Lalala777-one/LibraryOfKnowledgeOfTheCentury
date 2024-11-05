@@ -43,7 +43,7 @@ public class Menu {
                 }
             } catch (Exception e) {
                 System.out.println(Color.RED + "Ошибка: введите число!" + Color.RESET);
-                scanner.next();
+//                scanner.next(); вот эта штука лишняя точно
                 scanner.nextLine();
             }
         }
