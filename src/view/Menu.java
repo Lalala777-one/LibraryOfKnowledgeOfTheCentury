@@ -123,6 +123,7 @@ public class Menu {
             System.out.println("5. Найти книгу по автору");
             System.out.println("6. Найти книгу по названию");
             System.out.println("7. Найти книгу по жанру");
+            System.out.println("8. Сортировка книг");
             System.out.println("0. Вернуться в предыдущее меню");
             System.out.println(Color.GREEN + "\nСделайте выбор пункта меню" + Color.RESET);
 
@@ -131,7 +132,7 @@ public class Menu {
                 scanner.nextLine();
                 continue; // Повторяет запрос, не выходит из цикла
             } else {
-                int input = scanCorrectIntFromUser(7);
+                int input = scanCorrectIntFromUser(8);
                 //int input = scanner.nextInt();
                 scanner.nextLine();
                 if (input == 0) {
@@ -173,6 +174,10 @@ public class Menu {
                 break;
             case 7:
                 findBookByGenre();
+                waitRead();
+                break;
+            case 8:
+                sortBooks();
                 waitRead();
                 break;
             default:
@@ -482,6 +487,110 @@ public class Menu {
             System.out.println(Color.RED + "Не удалось взять книгу" + Color.RESET);
         }
     }
+
+    private void sortBooks() {
+        while (true) {
+            System.out.println(Color.CYAN + "Выберите сортировку книг!" + Color.RESET);
+            System.out.println("1. Список всех книг, отсортированный по автору");
+            System.out.println("2. Список всех книг, отсортированный по названию книги");
+            System.out.println("3. Список всех книг, отсортированный по жанру");
+            System.out.println(Color.BLUE + "0. Вернуться в предыдущее меню"  + Color.RESET);
+            System.out.println(Color.GREEN + "\nСделайте выбор пункта меню" + Color.RESET);
+
+            if (!scanner.hasNextInt()) {
+                System.out.println(Color.RED + "Введите число!" + Color.RESET);
+                scanner.nextLine();
+            } else {
+                int input = scanner.nextInt();
+                scanner.nextLine();
+                if (input == 0) {
+                    showMenu(); // або просто break, якщо showMenu буде викликано в іншій частині програми
+                    break;
+                } else if (input == 1) {
+                    sortByAuthor();
+                    break;
+                } else if (input == 2) {
+                    sortByTitle();
+                    break;
+                } else if (input == 3) {
+                    sortByGenre();
+                    break;
+                } else {
+                    System.out.println(Color.RED + "Неверный выбор. Попробуйте снова." + Color.RESET);
+                }
+            }
+        }
+    }
+
+    private void sortByAuthor() {
+        System.out.println(Color.PURPLE + "Сортировка книг по автору: " + Color.RESET);
+
+        MyList<Book> books = service.sortByAuthor(); // припускаємо, що service має метод sortByAuthor()
+
+        for (Book book : books) {
+            System.out.println(book.toString());
+        }
+
+        System.out.println(Color.BLUE + "0. Вернуться в меню" + Color.RESET);
+        System.out.println(Color.BLUE + "1. Вернуться к сортировке книг" + Color.RESET);
+        int choice = scanCorrectIntFromUser(1);
+        if (choice == 0) {
+            System.out.println("Возвращаемся в меню...");
+            return;
+        }
+        if (choice == 1) {
+            sortBooks();
+        } else {
+            System.out.println(Color.RED + "Введите число 0 или 1!" + Color.RESET);
+        }
+    }
+
+    private void sortByTitle() {
+        System.out.println(Color.PURPLE + "Сортировка книг по названию: " + Color.RESET);
+
+        MyList<Book> books = service.sortByTitle(); // припускаємо, що service має метод sortByTitle()
+
+        for (Book book : books) {
+            System.out.println(book.toString());
+        }
+
+        System.out.println(Color.BLUE + "0. Вернуться в меню" + Color.RESET);
+        System.out.println(Color.BLUE + "1. Вернуться к сортировке книг" + Color.RESET);
+        int choice = scanCorrectIntFromUser(1);
+        if (choice == 0) {
+            System.out.println("Возвращаемся в меню...");
+            return;
+        }
+        if (choice == 1) {
+            sortBooks();
+        } else {
+            System.out.println(Color.RED + "Введите число 0 или 1!" + Color.RESET);
+        }
+    }
+
+    private void sortByGenre() {
+        System.out.println(Color.PURPLE + "Сортировка книг по жанру: " + Color.RESET);
+
+        MyList<Book> books = service.sortByGenre(); // припускаємо, що service має метод sortByGenre()
+
+        for (Book book : books) {
+            System.out.println(book.toString());
+        }
+
+        System.out.println(Color.BLUE + "0. Вернуться в меню" + Color.RESET);
+        System.out.println(Color.BLUE + "1. Вернуться к сортировке книг" + Color.RESET);
+        int choice = scanCorrectIntFromUser(1);
+        if (choice == 0) {
+            System.out.println("Возвращаемся в меню...");
+            return;
+        }
+        if (choice == 1) {
+            sortBooks();
+        } else {
+            System.out.println(Color.RED + "Введите число 0 или 1!" + Color.RESET);
+        }
+    }
+
 
     private void showUserMenu() {
         while (true) {

@@ -56,4 +56,12 @@ public interface MainService {
     User getActiveUser();
 
     boolean loginAdmin(String email, String password);
+
+    //  --------------------- Book sorting -------------------------- //
+
+    MyList<Book> sortByAuthor();
+
+    MyList<Book> sortByTitle();
+
+    MyList<Book> sortByGenre();
 }

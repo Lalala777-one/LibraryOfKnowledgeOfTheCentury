@@ -8,8 +8,7 @@ import repository.UserRepository;
 import utils.MyArrayList;
 import utils.MyList;
 
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 public class MainServiceImpl implements MainService {
 
@@ -42,7 +41,7 @@ public class MainServiceImpl implements MainService {
             System.out.println("Название книги может содержать только буквы, цифры, пробелы и допустимые специальные символы: '-.,!?");
             return;
         }
-        if (!author.matches("^[\\p{L}\\s`\\-]+$")) {
+        if (!author.matches("^[\\p{L}\\s`\\-.]+$")) {
             System.out.println("Имя автора может содержать только буквы, пробелы и допустимые специальные символы: '-");
             return;
         }
@@ -191,6 +190,68 @@ public class MainServiceImpl implements MainService {
         } catch (Exception e) {
             System.out.println("Ошибка при удалении книги: " + e);
         }
+
+    }
+
+    // sort
+
+    @Override
+    public MyList<Book> sortByAuthor() {
+        MyList<Book> allBooks = repositoryBook.getAllBooks();
+        MyList<Book> booksByAuthor = new MyArrayList<>();
+
+        // Перетворюємо MyList<Book> на масив об'єктів
+        Object[] objectArray = allBooks.toArray();
+
+        // Приводимо об'єкти до типу Book і створюємо масив Book[]
+        Book[] bookArray = Arrays.copyOf(objectArray, objectArray.length, Book[].class);
+
+        // Сортуємо масив за автором
+        Arrays.sort(bookArray, Comparator.comparing(Book::getAuthor));
+
+        // Додаємо відсортовані книги в booksByAuthor
+        for (Book book : bookArray) {
+            booksByAuthor.add(book);
+        }
+
+        return booksByAuthor;
+    }
+
+
+    @Override
+    public  MyList<Book> sortByTitle() {
+        MyList<Book> allBooks = repositoryBook.getAllBooks();
+        MyList<Book> booksByTitle = new MyArrayList<>();
+
+        Object[] objectArray = allBooks.toArray();
+
+        Book[] bookArray = Arrays.copyOf(objectArray, objectArray.length, Book[].class);
+
+        Arrays.sort(bookArray, Comparator.comparing(Book::getTitle));
+
+        for (Book book : bookArray) {
+            booksByTitle.add(book);
+        }
+
+        return booksByTitle;
+    }
+
+    @Override
+    public MyList<Book> sortByGenre() {
+        MyList<Book> allBooks = repositoryBook.getAllBooks();
+        MyList<Book> booksByGenre = new MyArrayList<>();
+
+        Object[] objectArray = allBooks.toArray();
+
+        Book[] bookArray = Arrays.copyOf(objectArray, objectArray.length, Book[].class);
+
+        Arrays.sort(bookArray, Comparator.comparing(Book::getGenre));
+
+        for (Book book : bookArray) {
+            booksByGenre.add(book);
+        }
+
+        return booksByGenre;
     }
 
     //-----------------------------------------Alla Nazarenko------------------------------
