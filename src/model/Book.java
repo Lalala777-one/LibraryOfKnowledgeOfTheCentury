@@ -1,5 +1,7 @@
 package model;
 
+import utils.MyList;
+
 import java.util.Objects;
 
 public class Book {
@@ -55,16 +57,10 @@ public class Book {
         isBusy = busy;
     }
 
-
     @Override
     public String toString() {
-        return "Книга {" +
-                "id: " + id +
-                "; название: " + title +
-                "; автор: " + author +
-                "; жанр: " + genre +
-                "; занята: " + isBusy +
-                '}';
+        return String.format("Книга { ID: %-3s | Название: %-35s | Автор: %-35s | Жанр: %-25s | Занята: %-5s }",
+                id, title, author, genre, isBusy ? "Да" : "Нет");
     }
 
     @Override
